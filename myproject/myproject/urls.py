@@ -20,4 +20,5 @@ from aparcamientos import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', views.main),
+    url(r'^load_xml$', views.load_xml),
 ]

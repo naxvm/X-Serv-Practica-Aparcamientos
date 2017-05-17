@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -16,15 +17,28 @@ class Estilo(models.Model):
     font_size = models.FloatField(choices=SIZE_CHOICES, default=1.0)
     # Falta el campo para elegir el color de fondo en el CSS
 
-
+    # También faltaba este
+    page_title = models.CharField(max_length=100, null=True)
 
 class Aparcamiento(models.Model):
-    # De momento serán todos TextField
-   nombre = models.TextField() 
+    # Campos principales del XML
+    nombre = models.CharField(max_length=100, null=True)
 
-from django.contrib.auth.models import User
+
+    clase_vial=  models.CharField(max_length=100, null=True)  
+    nombre_via = models.CharField(max_length=100, null=True)
+
+    
+    distrito = models.CharField(max_length=100, null=True)
+    barrio = models.CharField(max_length=100, null=True)
+
+    accesibilidad = models.BooleanField(default=False)
+    descripcion = models.TextField(null=True)
+
+    # Campo aparte para seleccionar el aparcamiento como favorito"    
+    selected_by = models.ManyToManyField(User, blank=True)
+
 class Comentario(models.Model):
     contenido = models.TextField()
     hora = models.DateTimeField()
     aparcamiento = models.ForeignKey(Aparcamiento,null=True, blank=True)  
-    selected_by = models.ManyToManyField(User,null=True, blank=True)
