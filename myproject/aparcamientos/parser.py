@@ -26,7 +26,43 @@ def parsear(nodos):
         total.append(parsear_aparcamiento(aparcamiento['atributos']['atributo']))
     return total
 
-def cargar_db():
 
-   aparcamientosMadrid = parsear(entries)
-   return aparcamientosMadrid
+"""
+Ahora vamos a añadir todos los aparcamientos a la base de datos de la aplicación. Tendremos que importarla, y crear el método correspondiente, al que llamaremos desde '/load_xml' en views.py
+"""
+from .models import Aparcamiento
+
+def init_db():
+    aparcamientosMadrid = parsear(entries)
+
+    for aparcamiento in aparcamientosMadrid:
+        print(aparcamiento['NOMBRE'])
+        descripcionAux = None
+        distritoAux = None
+        barrioAux = None
+        try:
+            descripcionAux = aparcamiento['DESCRIPCION']
+        except KeyError:
+            try:    # Para arreglar el aparcamiento que tiene el atributo cambiado
+                descripcionAux = aparcamiento['DESCRIPCION-ENTIDAD']
+            except KeyError:
+                pass
+        try:
+            distritoAux = aparcamiento['LOCALIZACION']['DISTRITO']
+        except KeyError:
+            pass
+
+        try:
+            barrioAux = aparcamiento['LOCALIZACION']['BARRIO']
+        except KeyError:
+            pass
+
+        actual = Aparcamiento(nombre = aparcamiento['NOMBRE'],
+                              clase_vial = aparcamiento['LOCALIZACION']['CLASE-VIAL'],
+                              nombre_via = aparcamiento['LOCALIZACION']['NOMBRE-VIA'],
+                              distrito = distritoAux,
+                              barrio = barrioAux,
+                              accesibilidad = (aparcamiento['ACCESIBILIDAD'] == 1),
+                              descripcion = descripcionAux,
+                              )
+        actual.save()

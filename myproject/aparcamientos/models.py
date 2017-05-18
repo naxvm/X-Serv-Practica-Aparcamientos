@@ -36,7 +36,10 @@ class Aparcamiento(models.Model):
     descripcion = models.TextField(null=True)
 
     # Campo aparte para seleccionar el aparcamiento como favorito"    
-    selected_by = models.ManyToManyField(User, blank=True)
+    selected_by = models.ManyToManyField(User, blank=True, default=None)
+
+    def __str__(self):
+        return self.nombre
 
 class Comentario(models.Model):
     contenido = models.TextField()
