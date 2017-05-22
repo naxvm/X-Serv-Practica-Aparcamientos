@@ -1,4 +1,4 @@
-{% extends 'aparcamientos/base.html' %}
+{% extends 'aparcamientos/private/base.html' %}
 
 <style media="screen" type="text/css">
   #informacion {
@@ -23,7 +23,7 @@
           <ul id="caracteristicas">
               {% if aparcamiento.distrito %}
                   <li><strong>Distrito: </strong> {{ aparcamiento.distrito }} <br>
-                    {% endif %}
+              {% endif %}
 
               {% if aparcamiento.barrio %}
                   <li><strong>Barrio: </strong> {{ aparcamiento.barrio }} <br></li>
@@ -37,12 +37,41 @@
                   <li><strong>Dirección: </strong> {{ aparcamiento.clase_vial }} {{ aparcamiento.nombre_via }}<br></li>
               {% endif %}
 
-
+              {% if aparcamiento.url %}
+                  <li><strong><a href="{{ aparcamiento.url }}">Página (esmadrid)</a></strong><br>
+              {% endif %}
           </ul>
+
+
+          {% if comentarios %}
+              <h6><strong><br><br>COMENTARIOS DEL APARCAMIENTO:</strong></h6>
+               <div><ul>
+
+                    {% for comentario in comentarios %}
+                        <div>
+                          <li><strong>{{ comentario.hora }}:<br></strong>
+                          {{ comentario.contenido }}</li>
+                        </div>
+                    {% endfor %}
+
+               </ul></div>
+          {% endif %}
+
+          <!-- INTERFAZ PARA AÑADIR COMENTARIOS -->
+              <form method="POST">
+                    {% csrf_token %}
+                    <label for="comentario">Añadir comentario</label>
+                    <input type="text" name="comentario"/>
+                    <button type="submit">Comentar</button>
+
+              </form>
+
+
+
       {% else %}
           <strong>El aparcamiento seleccionado no existe.</strong>
-          <br><a href="/aparcamientos">Volver a la página de aparcamientos</a>
       {% endif %}
+      <br><a href="/aparcamientos">Volver a la página de aparcamientos</a>
   </center></div>
 
 

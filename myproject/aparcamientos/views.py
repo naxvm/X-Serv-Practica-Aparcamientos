@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from aparcamientos import parser
-from aparcamientos.models import Aparcamiento
+from aparcamientos.models import Aparcamiento, Comentario
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
+import datetime
 
 distritos = {}
 
@@ -12,34 +13,69 @@ distritos = {}
 def main(request):
 
     aparcamientos = Aparcamiento.objects.all()
-    return render(request, 'aparcamientos/main.html',{'aparcamientos': aparcamientos})
+    mas_comentados = Aparcamiento.objects.order_by('-numero_comentarios')[0:5]
+    if request.user.is_authenticated:
+        pagina = render(request, 'aparcamientos/private/main.html',{'usuario': request.user, 'aparcamientos': aparcamientos, 'mas_comentados': mas_comentados})
+
+    else:
+        pagina = render(request, 'aparcamientos/public/main.html',{'aparcamientos': aparcamientos, 'mas_comentados': mas_comentados})
+
+    return pagina
 
 
 
 def load_xml(request):
     aparcamientos = Aparcamiento.objects.all()
-    vacia = (len(aparcamientos) == 0)
-    if vacia:
+    if not aparcamientos:
         distritos = parser.init_db()    # Cargamos la base de datos si no tiene aún aparcamientos
 
-    return render(request, 'aparcamientos/redirect_to_main.html', {})
+    if request.user.is_authenticated:
+        respuesta = render(request, 'aparcamientos/private/redirect_to_main.html',{'usuario': request.user})
+    else:
+        respuesta = render(request, 'aparcamientos/public/redirect_to_main.html',{})
+    return respuesta
 
 def aparcamientos(request):
     aparcamientos = Aparcamiento.objects.all()
     for aparcamiento in aparcamientos:
         print(str(aparcamiento.id))
+    if request.user.is_authenticated:
+        respuesta = render(request, 'aparcamientos/private/mostrar_aparcamientos.html',{'usuario': request.user, 'aparcamientos': aparcamientos, 'accesibles': 0})
+    else:
+        respuesta = render(request, 'aparcamientos/public/mostrar_aparcamientos.html',{'aparcamientos': aparcamientos, 'accesibles': 0})
 
-    return render(request, 'aparcamientos/mostrar_aparcamientos.html',{ 'aparcamientos': aparcamientos })
+    return respuesta
 
 def ver_aparcamiento(request,numero):
     # Delegamos en la plantilla el controlar que el aparcamiento no exista
     mi_aparcamiento = None
+    mis_comentarios = None
     try:
         mi_aparcamiento = Aparcamiento.objects.get(identificador=numero)
         print(mi_aparcamiento.nombre)
     except:
         pass
-    return render(request, 'aparcamientos/mi_aparcamiento.html',{ 'aparcamiento': mi_aparcamiento })
+    if request.method == 'POST': # Hacemos un POST: añadimos un comentario
+        comentario = request.POST['comentario']
+        objeto_comentario = Comentario(contenido = comentario,
+                                       hora = datetime.datetime.now(),
+                                       aparcamiento = mi_aparcamiento,
+        )
+        objeto_comentario.save()
+
+        mi_aparcamiento.numero_comentarios = mi_aparcamiento.numero_comentarios + 1
+        mi_aparcamiento.save()
+
+    try:
+        mis_comentarios = Comentario.objects.filter(aparcamiento=mi_aparcamiento)
+    except:
+        pass
+    if request.user.is_authenticated:
+        respuesta = render(request, 'aparcamientos/private/mi_aparcamiento.html',{'usuario': request.user, 'aparcamiento': mi_aparcamiento, 'comentarios': mis_comentarios})
+    else:
+        respuesta = render(request, 'aparcamientos/public/mi_aparcamiento.html',{'aparcamiento': mi_aparcamiento, 'comentarios': mis_comentarios})
+
+    return respuesta
 
 @csrf_exempt
 def login_page(request):
@@ -60,4 +96,27 @@ def login_page(request):
         texto = 'Introduce tus datos para iniciar sesión'
         redirigir = 0
 
-    return render(request, 'aparcamientos/login.html', {'texto': texto, 'redirigir': redirigir})
+    if request.user.is_authenticated:
+        respuesta = render(request, 'aparcamientos/private/login.html',{'usuario': request.user, 'texto': texto, 'redirigir': redirigir})
+    else:
+        respuesta = render(request, 'aparcamientos/public/login.html',{'texto': texto, 'redirigir': redirigir})
+    return respuesta
+
+
+@csrf_exempt
+def logout_page(request):
+    logout(request)
+    print('Hola')
+    return render(request, 'aparcamientos/private/login.html',{})
+
+
+def solo_accesibles(request):
+    aparcamientos = Aparcamiento.objects.filter(accesibilidad=1)
+    for aparcamiento in aparcamientos:
+        print(str(aparcamiento.id))
+    if request.user.is_authenticated:
+        respuesta = render(request, 'aparcamientos/private/mostrar_aparcamientos.html',{'usuario': request.user, 'aparcamientos': aparcamientos, 'accesibles': 1})
+    else:
+        respuesta = render(request, 'aparcamientos/public/mostrar_aparcamientos.html',{'aparcamientos': aparcamientos, 'accesibles': 1})
+
+    return respuesta

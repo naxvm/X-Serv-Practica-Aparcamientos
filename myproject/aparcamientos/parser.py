@@ -63,6 +63,7 @@ def init_db():
 
         actual = Aparcamiento(identificador = aparcamiento['ID-ENTIDAD'],
                               nombre = aparcamiento['NOMBRE'],
+                              url = aparcamiento['CONTENT-URL'],
                               clase_vial = aparcamiento['LOCALIZACION']['CLASE-VIAL'],
                               nombre_via = aparcamiento['LOCALIZACION']['NOMBRE-VIA'],
                               distrito = distritoAux,

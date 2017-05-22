@@ -1,0 +1,64 @@
+{% extends 'aparcamientos/public/base.html' %}
+
+<style media="screen" type="text/css">
+  #informacion {
+    margin-top: 200px;
+    padding-top: 50px;
+  }
+
+  #caracteristicas{
+    margin-top: 50px;
+    padding-top: 50px;
+  }
+
+</style>
+{% block content %}
+
+  <div id="informacion"><center>
+      {% if aparcamiento %}
+          <h1><strong>Nombre:</strong> {{ aparcamiento.nombre }}</h1></center>
+          {% if aparcamiento.accesibilidad %}
+              <center><u>¡Aparcamiento accesible!</u></center>
+          {% endif %}
+          <ul id="caracteristicas">
+              {% if aparcamiento.distrito %}
+                  <li><strong>Distrito: </strong> {{ aparcamiento.distrito }} <br>
+                    {% endif %}
+
+              {% if aparcamiento.barrio %}
+                  <li><strong>Barrio: </strong> {{ aparcamiento.barrio }} <br></li>
+              {% endif %}
+
+              {% if aparcamiento.descripcion %}
+                  <li><strong>Descripción:</strong> {{ aparcamiento.descripcion }}<br></li>
+              {% endif %}
+
+              {% if aparcamiento.clase_vial and aparcamiento.nombre_via %}
+                  <li><strong>Dirección: </strong> {{ aparcamiento.clase_vial }} {{ aparcamiento.nombre_via }}<br></li>
+              {% endif %}
+
+
+	          {% if comentarios %}
+               <div>
+                    {% for comentario in comentarios %}
+                        <div>
+                          <strong>{{ comentario.hora }}:<br></strong>
+                          {{ comentario.contenido }}
+                        </div>
+                    {% endfor %}
+
+               </div>
+          {% endif %}
+
+
+          </ul>
+      {% else %}
+          <strong>El aparcamiento seleccionado no existe.</strong>
+          <br><a href="/aparcamientos">Volver a la página de aparcamientos</a>
+      {% endif %}
+  </center></div>
+
+
+
+
+{% endblock content %}

@@ -1,11 +1,16 @@
-{% extends 'aparcamientos/base.html' %}
-{% load staticfiles %}-->
+{% extends 'aparcamientos/private/base.html' %}
+{% load staticfiles %}
 
 
 {% block content %}
 <div>
 
   {% if aparcamientos %}  <!-- Comprobamos que haya aparcamientos -->
+    {% if not accesibles %}
+        <strong><a href="/aparcamientos/accesibles">Mostrar sólo accesibles</strong>
+    {% else %}
+        <strong><a href="/aparcamientos">Mostrar todos los aparcamientos</strong>
+    {% endif %}
     {% for aparcamiento in aparcamientos %}
         <div>
             <p><center><a href="/aparcamientos/{{ aparcamiento.identificador }}">{{ aparcamiento.nombre }}

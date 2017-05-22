@@ -1,0 +1,31 @@
+{% extends 'aparcamientos/private/base.html' %}
+
+{% block content %}
+<style media="screen" type="text/css">
+  #texto_main {
+    margin-top: 100px;
+  }
+  #enlace_aparcamientos {
+      margin-top: 100px;
+  }
+
+</style>
+
+
+<div id="texto_main"><center>Estás en la página principal</center></div>
+
+<div id="enlace_aparcamientos"><center>Ir a <a href="aparcamientos">todos los aparcamientos</a></center></div>
+<br><br>
+<div id="mas_comentados"><center><strong>Aparcamientos más comentados:</strong></center>
+    <ol>
+    {% for aparcamiento in mas_comentados %}
+        <li><a href="{{ aparcamiento.url }}">{{ aparcamiento.nombre }}</a>
+          {% if aparcamiento.clase_vial and aparcamiento.nombre_via %}
+              ({{ aparcamiento.clase_vial }} {{ aparcamiento.nombre_via }}).
+          {% endif %}
+          <a href="/aparcamientos/{{ aparcamiento.identificador }}">Información local.</a>
+    {% endfor %}
+  </ol>
+</div>
+
+{% endblock content %}

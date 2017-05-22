@@ -1,0 +1,61 @@
+{% load staticfiles %}
+<!-- Añadimos los ficheros estáticos (CSS, imágenes, etc.) -->
+
+
+<html>
+    <head>
+        <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.ico' %}">
+        <title>MisAparcamientos</title>
+        <!-- Incluimos la cabecera para los CSS de bootstrap -->
+
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="{% static 'css/aparcamientos.css' %}">
+        <!-- Cabecera para las fuentes (Google Fonts) -->
+        <link href="https://fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+        <link href="https://fonts.googleapis.com/css?family=Playfair+Display&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+    </head>
+
+
+    <body>
+
+        <header id="main-header">
+            <a id="logo-header" href="/">
+                <span id="site-name">Aparcamientos</span>
+                <span id="site-desc">Práctica final de SARO (2017)</span>
+            </a>
+<!--
+            <nav>
+                <ul>
+                    <li><a href="/">Inicio</a></li>
+                    <li><a href="#">Acerca de</a></li>
+                    <li><a href="#">Contacto</a></li>
+                </ul>-->
+            </nav>
+            <div id=datos_usuario>
+              <span>Hola, {{ user.username }}</span>
+              <a href="/logout"><button>Cerrar sesión</button></a>
+
+            </div>
+        </header>
+
+
+
+
+        <div id="contenido">
+        {% block content %}
+
+        {% endblock %}
+        </div>
+
+        <div id="bottom"><center>Esta aplicación
+          utiliza datos del portal de datos abiertos de la ciudad de Madrid.
+          <a href="https://goo.gl/SiJcIL">Enlace al fichero XML con los datos.</a>
+          <a href="https://goo.gl/jmzQ5N">Enlace a la descripción del formato.</a>
+        </center></div>
+    </body>
+</html>
