@@ -1,21 +1,19 @@
-<html>
-    <head>
-        <title>Página principal</title>
+{% extends 'aparcamientos/base.html' %}
 
-    </head>
+{% block content %}
+<style media="screen" type="text/css">
+  #texto_main {
+    margin-top: 100px;
+  }
+  #enlace_aparcamientos {
+      margin-top: 100px;
+  }
 
-    <body>
-        <h1><strong>¡Hola!<br>Estás en la página principal</strong>
-        <h2>Bienvenido</h2>
-
-        <div>
-            <p>
-                Pulsa <a href="">aquí</a> para no ir a ningún sitio.
-            </p>
-
-        </div>
+</style>
 
 
+<div id="texto_main"><center>Estás en la página principal</center></div>
 
-    </body>
-</html>
+<div id="enlace_aparcamientos"><center>Ir a los <a href="aparcamientos">aparcamientos disponibles</a></center></div>
+
+{% endblock content %}

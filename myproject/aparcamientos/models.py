@@ -22,20 +22,21 @@ class Estilo(models.Model):
 
 class Aparcamiento(models.Model):
     # Campos principales del XML
+    identificador = models.IntegerField(null=True)
     nombre = models.CharField(max_length=100, null=True)
 
 
-    clase_vial=  models.CharField(max_length=100, null=True)  
+    clase_vial=  models.CharField(max_length=100, null=True)
     nombre_via = models.CharField(max_length=100, null=True)
 
-    
+
     distrito = models.CharField(max_length=100, null=True)
     barrio = models.CharField(max_length=100, null=True)
 
     accesibilidad = models.BooleanField(default=False)
     descripcion = models.TextField(null=True)
 
-    # Campo aparte para seleccionar el aparcamiento como favorito"    
+    # Campo aparte para seleccionar el aparcamiento como favorito"
     selected_by = models.ManyToManyField(User, blank=True, default=None)
 
     def __str__(self):
@@ -44,4 +45,4 @@ class Aparcamiento(models.Model):
 class Comentario(models.Model):
     contenido = models.TextField()
     hora = models.DateTimeField()
-    aparcamiento = models.ForeignKey(Aparcamiento,null=True, blank=True)  
+    aparcamiento = models.ForeignKey(Aparcamiento,null=True, blank=True)

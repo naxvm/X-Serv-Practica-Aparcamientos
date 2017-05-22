@@ -21,4 +21,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', views.main),
     url(r'^load_xml$', views.load_xml),
+    url(r'^aparcamientos$', views.aparcamientos),
+    url(r'^aparcamientos/(\d+)$', views.ver_aparcamiento),
+    url(r'^login$', views.login_page),
 ]
