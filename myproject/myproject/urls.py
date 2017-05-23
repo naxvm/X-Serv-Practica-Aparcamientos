@@ -23,7 +23,9 @@ urlpatterns = [
     url(r'^load_xml$', views.load_xml),
     url(r'^aparcamientos$', views.aparcamientos),
     url(r'^aparcamientos/accesibles$', views.solo_accesibles),
-    url(r'^aparcamientos/(\d+)$', views.ver_aparcamiento),
+    url(r'^aparcamientos/([0-9]+)$', views.ver_aparcamiento),
+    url(r'aparcamientos/([0-9]+)/select', views.seleccionar_aparcamiento),
+    url(r'aparcamientos/([0-9]+)/unselect', views.deseleccionar_aparcamiento),
     url(r'^login$', views.login_page),
-    url(r'^logout$', views.logout),
+    url(r'^logout$', views.logout_page),
 ]

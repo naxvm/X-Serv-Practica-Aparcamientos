@@ -33,14 +33,45 @@
                   <li><strong>Descripción:</strong> {{ aparcamiento.descripcion }}<br></li>
               {% endif %}
 
+              {% if aparcamiento.correo %}
+                  <li><strong>Correo:</strong> {{ aparcamiento.correo }}<br></li>
+              {% endif %}
+
+              {% if aparcamiento.telefono %}
+                  <li><strong>Teléfono:</strong> {{ aparcamiento.telefono }}<br></li>
+              {% endif %}
+
               {% if aparcamiento.clase_vial and aparcamiento.nombre_via %}
-                  <li><strong>Dirección: </strong> {{ aparcamiento.clase_vial }} {{ aparcamiento.nombre_via }}<br></li>
+                  <li><strong>Dirección: </strong> {{ aparcamiento.clase_vial }} {{ aparcamiento.nombre_via }}
+                    {% if aparcamiento.numero %}
+                        {{ aparcamiento.numero }}
+                    {% endif %}
+                    <br></li>
               {% endif %}
 
               {% if aparcamiento.url %}
                   <li><strong><a href="{{ aparcamiento.url }}">Página (esmadrid)</a></strong><br>
               {% endif %}
+
+              {% if aparcamiento.latitud %}
+                  <li><strong>Latitud:</strong> {{ aparcamiento.latitud}}<br>
+              {% endif %}
+
+              {% if aparcamiento.longitud %}
+                  <li><strong>Longitud:</strong> {{ aparcamiento.longitud}}<br>
+              {% endif %}
           </ul>
+
+<!-- Interfaz para seleccionar el aparcamiento -->
+          <br><br>
+          {% if seleccionado %}
+              <div>Has seleccionado este aparcamiento.<a href="/aparcamientos/{{ aparcamiento.identificador }}/unselect">Deseleccionar.</a></div>
+          {% else %}
+              <div><a href="/aparcamientos/{{ aparcamiento.identificador }}/select">Seleccionar este aparcamiento.</a></div>
+          {% endif %}
+
+
+
 
 
           {% if comentarios %}

@@ -33,8 +33,6 @@ Ahora vamos a añadir todos los aparcamientos a la base de datos de la aplicaci�
 from .models import Aparcamiento
 
 def init_db():
-    # Tenemos que crear además una lista de distritos, para el filtro de distritos.
-    distritos = {}
     aparcamientosMadrid = parsear(entries)
 
     for aparcamiento in aparcamientosMadrid:
@@ -42,6 +40,11 @@ def init_db():
         descripcionAux = None
         distritoAux = None
         barrioAux = None
+        numeroAux = None
+        telefonoAux = None
+        correoAux = None
+        latitudAux = None
+        longitudAux = None
         try:
             descripcionAux = aparcamiento['DESCRIPCION']
         except KeyError:
@@ -51,8 +54,17 @@ def init_db():
                 pass
         try:
             distritoAux = aparcamiento['LOCALIZACION']['DISTRITO']
-            if not distritoAux in distritos:
-                print('NUEVO')
+
+        except KeyError:
+            pass
+
+        try:
+            telefonoAux = aparcamiento['DATOSCONTACTOS']['TELEFONO']
+        except KeyError:
+            pass
+
+        try:
+            correoAux = aparcamiento['DATOSCONTACTOS']['EMAIL']
         except KeyError:
             pass
 
@@ -61,17 +73,37 @@ def init_db():
         except KeyError:
             pass
 
+        try:
+            numeroAux = aparcamiento['LOCALIZACION']['NUM']
+        except KeyError:
+            print(aparcamiento['NOMBRE'])
+            print('sin numero')
+
+        try:
+            latitudAux = aparcamiento['LOCALIZACION']['LATITUD']
+        except KeyError:
+            pass
+
+        try:
+            longitudAux = aparcamiento['LOCALIZACION']['LONGITUD']
+        except KeyError:
+            pass
+
+
+
         actual = Aparcamiento(identificador = aparcamiento['ID-ENTIDAD'],
                               nombre = aparcamiento['NOMBRE'],
                               url = aparcamiento['CONTENT-URL'],
                               clase_vial = aparcamiento['LOCALIZACION']['CLASE-VIAL'],
                               nombre_via = aparcamiento['LOCALIZACION']['NOMBRE-VIA'],
+                              latitud = latitudAux,
+                              longitud = longitudAux,
+                              numero = numeroAux,
+                              telefono = telefonoAux,
+                              correo = correoAux,
                               distrito = distritoAux,
                               barrio = barrioAux,
                               accesibilidad = (aparcamiento['ACCESIBILIDAD'] == '1'),
                               descripcion = descripcionAux,
                               )
         actual.save()
-
-
-    return distritos

@@ -1,10 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.conf import settings
 
 # Create your models here.
 
 class Estilo(models.Model):
     user = models.OneToOneField(User, null=True)
+
     # Ahora definimos los tamaños de letra que utilizaremos para el CSS
 
     SIZE_CHOICES = (
@@ -30,15 +32,20 @@ class Aparcamiento(models.Model):
 
     clase_vial=  models.CharField(max_length=100, null=True)
     nombre_via = models.CharField(max_length=100, null=True)
+    numero = models.CharField(max_length=10, null=True)
+    telefono = models.CharField(max_length=100, null=True)
+    correo = models.CharField(max_length=50, null=True)
 
     distrito = models.CharField(max_length=100, null=True)
     barrio = models.CharField(max_length=100, null=True)
+    latitud = models.CharField(max_length=25, null=True)
+    longitud = models.CharField(max_length=25, null=True)
 
     accesibilidad = models.BooleanField(default=False)
     descripcion = models.TextField(null=True)
 
     # Campo aparte para seleccionar el aparcamiento como favorito"
-    selected_by = models.ManyToManyField(User, blank=True, default=None)
+    selected_by = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, default=None)
     numero_comentarios = models.IntegerField(default=0)
 
     def __str__(self):

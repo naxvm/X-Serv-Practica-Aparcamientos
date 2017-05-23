@@ -4,6 +4,22 @@
 
 {% block content %}
 <div>
+<div><strong>Filtrar por distrito:</strong>
+<form method="POST" id="formulario">
+  {% csrf_token %}
+    <select name="distrito">
+      <option value="todos">Todos</option>
+      {% for distrito in distritos %}
+          <option
+          {% if distrito_filtro == distrito %}
+          selected
+          {% endif %}
+          value="{{ distrito }}">{{ distrito }}</option>
+      {% endfor %}
+    </select>
+      <button type="submit">Filtrar</button>
+</form></div>
+
 
   {% if aparcamientos %}  <!-- Comprobamos que haya aparcamientos -->
     {% if not accesibles %}
