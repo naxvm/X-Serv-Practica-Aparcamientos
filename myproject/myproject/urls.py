@@ -30,5 +30,7 @@ urlpatterns = [
     url(r'^logout$', views.logout_page),
     url(r'^about$', views.about),
     url(r'^([a-zA-Z0-9]+$)', views.user_page),
+    url(r'^([a-zA-Z0-9]+)/xml$', views.user_xml),
+    #url(r'^(*)$', views.not_found),
 
 ]

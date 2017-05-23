@@ -16,8 +16,8 @@
 
         <link href="https://fonts.googleapis.com/css?family=Playfair+Display&subset=latin,latin-ext" rel="stylesheet" type="text/css">
 
-        <!-- Añadimos la personalización de cada usuario -->
         <link rel="stylesheet" href="{% static 'css/aparcamientos.css' %}">
+        <!-- Añadimos la personalización de cada usuario -->
         <style media="screen" type="text/css">
               body {
                   background-color: {{ estilo.color_fondo }};
@@ -38,13 +38,16 @@
                 <span id="site-name">Aparcamientos</span>
                 <span id="site-desc">Práctica final de SARO (2017)</span>
             </a>
-<!--
+
             <nav>
                 <ul>
-                    <li><a href="/">Inicio</a></li>
-                    <li><a href="#">Acerca de</a></li>
-                    <li><a href="#">Contacto</a></li>
-                </ul>-->
+                    {% if not inicio %}
+                      <li><a href="/">Inicio</a></li>
+                    {% endif %}
+                    <li><a href="/aparcamientos">Todos los aparcamientos</a></li>
+                    <li><a href="/about">Ayuda</a></li>
+                    <li><a href="/{{ user.username }}">Mi página</a></li>
+                </ul>
             </nav>
             <div id=datos_usuario>
               <span>Hola, {{ user.username }}</span>

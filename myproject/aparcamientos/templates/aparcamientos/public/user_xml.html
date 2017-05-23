@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+
+<Contenidos>
+  <infoDataset>
+    <nombre>Aparcamientos seleccionados por el usuario {{ usuario }}</nombre>
+    <descripcion>XML generado por la aplicación de Aparcamientos (práctica final de SARO, 2017)</descripcion>
+  </infoDataset>
+
+{% for aparcamiento in aparcamientos_seleccionados %}
+    <contenido>
+        <nombre>{{ aparcamiento.nombre }}</nombre>
+        <identificador>{{ aparcamiento.identificador}}</identificador>
+        <url>{{ aparcamiento.url }}</url>
+        <localizacion>
+            <clase_vial>{{ aparcamiento.clase_vial }}</clase_vial>
+            <nombre_via>{{ aparcamiento.nombre_via }}</nombre_via>
+            <distrito>{{ aparcamiento.distrito }}</distrito>
+            <barrio>{{ aparcamiento.barrio }}</barrio>
+            <latitud>{{ aparcamiento.latitud }}</latitud>
+            <longitud>{{ aparcamiento.longitud }}</longitud>
+        </localizacion>
+        <contacto>
+            <correo>{{ aparcamiento.correo }}</correo>
+            <telefono>{{ aparcamiento.telefono }}</telefono>
+        </contacto>
+
+        <accesible>{{ aparcamiento.accesibilidad }}</accesible>
+        <descripcion>{{ aparcamiento.descripcion }}</descripcion>
+
+    </contenido>
+{% endfor %}
+
+
+
+</Contenidos>

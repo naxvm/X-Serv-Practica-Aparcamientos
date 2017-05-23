@@ -44,16 +44,16 @@ def main(request):
             titulo = ('Página de ' + str(usuario))
             print('Not found. ', titulo)
         print(titulo)
-        paginas[usuario] = titulo
+        paginas[str(usuario)] = titulo
 
 
 
     if request.user.is_authenticated:
         (fuente, titulo, color_fondo) = estilo_usuario(request.user)
         estilo = {'fuente': fuente, 'color_fondo': color_fondo}
-        pagina = render(request, 'aparcamientos/private/main.html',{'usuario': request.user,'estilo': estilo, 'aparcamientos': aparcamientos, 'mas_comentados': mas_comentados, 'paginas': paginas})
+        pagina = render(request, 'aparcamientos/private/main.html',{'inicio': True,'usuario': request.user,'estilo': estilo, 'aparcamientos': aparcamientos, 'mas_comentados': mas_comentados, 'paginas': paginas})
     else:
-        pagina = render(request, 'aparcamientos/public/main.html',{'aparcamientos': aparcamientos, 'mas_comentados': mas_comentados, 'paginas': paginas})
+        pagina = render(request, 'aparcamientos/public/main.html',{'inicio': True,'aparcamientos': aparcamientos, 'mas_comentados': mas_comentados, 'paginas': paginas})
 
     return pagina
 
@@ -285,3 +285,14 @@ def about(request):
 
 
     return respuesta
+
+
+
+def user_xml(request, user):
+    usuario = User.objects.get(username=user)
+    aparcamientos_seleccionados = []
+    nombres_seleccionados = SeleccionadoPor.objects.filter(selected_by=usuario)
+    for nombre in nombres_seleccionados:
+        aparcamientos_seleccionados.append(Aparcamiento.objects.get(nombre=nombre))
+    print(aparcamientos_seleccionados)
+    return render(request, 'aparcamientos/public/user_xml.html',{'usuario': usuario, 'aparcamientos_seleccionados': aparcamientos_seleccionados}, content_type="text/xml")
