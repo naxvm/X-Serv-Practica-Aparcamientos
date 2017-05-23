@@ -1,0 +1,53 @@
+{% extends 'aparcamientos/private/base.html' %}
+
+
+{% block content %}
+
+<div><center><strong><h3>Página de {{ usuario }}</h3></strong></center></div>
+
+
+
+
+{% if seleccionados %}
+<div>
+    <center><h5>APARCAMIENTOS SELECCIONADOS:</h5></center>
+    <ul>
+        {% for seleccionado in seleccionados %}
+            <li><a href="{{ seleccionado.aparcamiento.url }}">{{ seleccionado.aparcamiento.nombre }}</a>
+              {% if seleccionado.aparcamiento.clase_vial and seleccionado.aparcamiento.nombre_via %}
+                  ({{ seleccionado.aparcamiento.clase_vial }} {{ seleccionado.aparcamiento.nombre_via }}).
+              {% endif %}
+              <a href="/aparcamientos/{{ seleccionado.aparcamiento.identificador }}">Información local.</a>
+               (agregado {{ seleccionado.cuando }})
+          </li>
+
+        {% endfor %}
+    </ul>
+    {% if backward %}
+    <span><a href="/{{ usuario }}?offset={{ offset|add:"-1" }}">5 Previos</a></span>
+    {% endif %}
+
+    {% if forward %}
+    <span><a href="/{{ usuario }}?offset={{ offset|add:"1" }}"> 5 Siguientes</a></span>
+    {% endif %}
+</div>
+{% else %}
+
+<div>Este usuario no ha seleccionado ningún aparcamiento todavía</div>
+
+{% endif %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock content %}

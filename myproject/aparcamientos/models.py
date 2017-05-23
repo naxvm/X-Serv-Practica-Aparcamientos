@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 from django.contrib.auth.models import User
 from django.conf import settings
 
@@ -23,6 +24,19 @@ class Estilo(models.Model):
     # También faltaba este
     page_title = models.CharField(max_length=100, null=True)
 
+
+class SeleccionadoPor(models.Model):
+    selected_by = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, default=None)
+    aparcamiento = models.ForeignKey('Aparcamiento')
+    cuando = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return (str(self.aparcamiento))
+
+
+
+
+
 class Aparcamiento(models.Model):
     # Campos principales del XML
     identificador = models.IntegerField(null=True)
@@ -45,7 +59,6 @@ class Aparcamiento(models.Model):
     descripcion = models.TextField(null=True)
 
     # Campo aparte para seleccionar el aparcamiento como favorito"
-    selected_by = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, default=None)
     numero_comentarios = models.IntegerField(default=0)
 
     def __str__(self):

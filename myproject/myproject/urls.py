@@ -28,4 +28,7 @@ urlpatterns = [
     url(r'aparcamientos/([0-9]+)/unselect', views.deseleccionar_aparcamiento),
     url(r'^login$', views.login_page),
     url(r'^logout$', views.logout_page),
+    url(r'^about$', views.about),
+    url(r'^([a-zA-Z0-9]+$)', views.user_page),
+
 ]

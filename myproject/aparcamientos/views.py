@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from aparcamientos import parser
 from aparcamientos import models
-from aparcamientos.models import Aparcamiento, Comentario
+from aparcamientos.models import Aparcamiento, Comentario, SeleccionadoPor
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import login, logout, authenticate
@@ -86,13 +86,10 @@ def ver_aparcamiento(request,numero):
     except:
         pass
     if request.user.is_authenticated:
-        usuario = request.user
-        seleccionado = None
+        usuario = User.objects.get(username=request.user)
+        aparcamiento = Aparcamiento.objects.get(identificador=numero)
+        seleccionado = SeleccionadoPor.objects.filter(selected_by=usuario,aparcamiento=aparcamiento).count()
 
-        try:
-            seleccionado = usuario.aparcamiento_set.get(nombre=mi_aparcamiento.nombre)
-        except:
-            pass
 
         respuesta = render(request, 'aparcamientos/private/mi_aparcamiento.html',{'usuario': usuario, 'aparcamiento': mi_aparcamiento, 'comentarios': mis_comentarios, 'seleccionado': seleccionado})
     else:
@@ -160,16 +157,62 @@ def solo_accesibles(request):
 
 
 def seleccionar_aparcamiento(request, id):
-    seleccionado = Aparcamiento.objects.get(identificador=id)
     usuario = User.objects.get(username=request.user)
+    mi_aparcamiento = Aparcamiento.objects.get(identificador=id)
+    seleccionado = SeleccionadoPor.objects.create(aparcamiento = mi_aparcamiento)
     seleccionado.selected_by.add(usuario)
-    seleccionado.save()
 
     return ver_aparcamiento(request,id)
 
 def deseleccionar_aparcamiento(request, id):
-    seleccionado = Aparcamiento.objects.get(identificador=id)
     usuario = User.objects.get(username=request.user)
-    seleccionado.selected_by.remove(usuario)
-    seleccionado.save()
+
+    aparcamiento = Aparcamiento.objects.get(identificador=id)
+    SeleccionadoPor.objects.get(selected_by=usuario, aparcamiento=aparcamiento).delete()
+    print('borrado')
     return ver_aparcamiento(request,id)
+
+
+def user_page(request, username):
+    usuario = User.objects.get(username=username)
+
+    aparcamientos_seleccionados = SeleccionadoPor.objects.filter(selected_by=usuario)
+    offset = 0
+    backward = True
+    forward = True
+    try:
+        offset = int(request.GET['offset'])
+    except KeyError:
+        pass
+
+    if offset == 0:
+        backward = False
+
+    if 5 * (offset + 1) >= len(aparcamientos_seleccionados):
+        forward = False
+    seleccionados_trozo = SeleccionadoPor.objects.filter(selected_by=usuario)[offset*5:(offset+1)*5]
+
+
+
+
+    if request.user.is_authenticated:
+        respuesta = render(request, 'aparcamientos/private/pagina_de.html', {'usuario': usuario, 'offset': offset,'seleccionados': seleccionados_trozo, 'backward': backward, 'forward': forward})
+    else:
+        respuesta = render(request, 'aparcamientos/public/pagina_de.html', {'usuario': usuario, 'offset': offset, 'seleccionados': seleccionados_trozo, 'backward': backward, 'forward': forward})
+
+    return respuesta
+
+
+
+
+def about(request):
+    print(request.user)
+    usuario = User.objects.get(username=request.user)
+
+    if request.user.is_authenticated:
+        respuesta = render(request,'aparcamientos/private/ayuda.html', {'usuario': usuario})
+    else:
+        respuesta = render(request, 'aparcamientos/public/ayuda.html',{})
+
+
+    return respuesta
