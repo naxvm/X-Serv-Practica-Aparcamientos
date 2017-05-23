@@ -31,6 +31,45 @@
     <span><a href="/{{ usuario }}?offset={{ offset|add:"1" }}"> 5 Siguientes</a></span>
     {% endif %}
 </div>
+
+
+
+    {% if personalizar %}
+        <div>Personaliza el sitio
+            <form method="POST">
+              {% csrf_token %}
+                <label for="bg_color_choose">Color de fondo:</label>
+                <select name="bg_color_choose" id="bg_color_choose">
+                  <option selected value="white">Blanco</option>
+                  <option value="gray">Gris</option>
+                  <option value="green">Verde</option>
+                  <option value="orange">Naranja</option>
+                  <option value="cadetblue">Azul</option>
+                  <option value="red">Rojo</option>
+                </select>
+
+                <label for="font_size_choose">Tamaño de fuente:</label>
+                <select name="font_size_choose" id="font_size_choose">
+                    <option value="1.2">Muy grande</option>
+                    <option value="1.1">Grande</option>
+                    <option selected value="1.0">Normal</option>
+                    <option value="0.9">Pequeña</option>
+                    <option value="0.8">Muy pequeña</option>
+
+                </select>
+                <label for="titulo_nuevo">Cambiar el título de tu página personal</label>
+                <input type="text" id="titulo_nuevo" name="titulo_nuevo">
+
+                <input type="submit" value="Enviar">
+            </form>
+          </div>
+
+
+
+
+        </div>
+    {% endif %}
+
 {% else %}
 
 <div>Este usuario no ha seleccionado ningún aparcamiento todavía</div>

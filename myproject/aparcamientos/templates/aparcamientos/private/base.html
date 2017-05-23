@@ -10,12 +10,22 @@
 
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
 
-        <link rel="stylesheet" href="{% static 'css/aparcamientos.css' %}">
+
         <!-- Cabecera para las fuentes (Google Fonts) -->
         <link href="https://fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel="stylesheet" type="text/css">
 
         <link href="https://fonts.googleapis.com/css?family=Playfair+Display&subset=latin,latin-ext" rel="stylesheet" type="text/css">
 
+        <!-- Añadimos la personalización de cada usuario -->
+        <link rel="stylesheet" href="{% static 'css/aparcamientos.css' %}">
+        <style media="screen" type="text/css">
+              body {
+                  background-color: {{ estilo.color_fondo }};
+              }
+              * {
+                font-size: {{ estilo.fuente }}em;
+              }
+        </style>
 
 
     </head>

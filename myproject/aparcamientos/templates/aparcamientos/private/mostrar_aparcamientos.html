@@ -8,7 +8,7 @@
 <form method="POST" id="formulario">
   {% csrf_token %}
     <select name="distrito">
-      <option value="todos">Todos</option>
+      <option selected value="todos">Todos</option>
       {% for distrito in distritos %}
           <option
           {% if distrito_filtro == distrito %}

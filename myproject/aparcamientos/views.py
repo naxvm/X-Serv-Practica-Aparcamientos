@@ -1,12 +1,28 @@
 from django.shortcuts import render
 from aparcamientos import parser
 from aparcamientos import models
-from aparcamientos.models import Aparcamiento, Comentario, SeleccionadoPor
+from aparcamientos.models import Aparcamiento, Comentario, SeleccionadoPor, Estilo
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
 import datetime
+
+
+
+def estilo_usuario(usuario):
+    mi_usuario = User.objects.get(username=usuario)
+    try:
+        mi_estilo = Estilo.objects.get(user=mi_usuario)
+        fuente = mi_estilo.font_size
+        titulo = mi_estilo.page_title
+        color_fondo = mi_estilo.background_color
+    except Estilo.DoesNotExist:
+        fuente = 1.0
+        titulo = ("Página de " + str(usuario))
+        color_fondo = 'white'
+
+    return (fuente, titulo, color_fondo)
 
 
 # Create your views here.
@@ -15,11 +31,29 @@ def main(request):
     aparcamientos = Aparcamiento.objects.all()
     mas_comentados = Aparcamiento.objects.filter(numero_comentarios__gt = 0)
     mas_comentados = mas_comentados.order_by('-numero_comentarios')[0:5]
-    if request.user.is_authenticated:
-        pagina = render(request, 'aparcamientos/private/main.html',{'usuario': request.user, 'aparcamientos': aparcamientos, 'mas_comentados': mas_comentados})
 
+    paginas = {}
+    # Obtenemos las páginas de usuarios
+    for usuario in User.objects.all():
+        print('-------- ', usuario)
+        try:
+            titulo = Estilo.objects.get(user=usuario).page_title
+            if not titulo:
+                titulo = ('Página de ' + str(usuario))
+        except Estilo.DoesNotExist:
+            titulo = ('Página de ' + str(usuario))
+            print('Not found. ', titulo)
+        print(titulo)
+        paginas[usuario] = titulo
+
+
+
+    if request.user.is_authenticated:
+        (fuente, titulo, color_fondo) = estilo_usuario(request.user)
+        estilo = {'fuente': fuente, 'color_fondo': color_fondo}
+        pagina = render(request, 'aparcamientos/private/main.html',{'usuario': request.user,'estilo': estilo, 'aparcamientos': aparcamientos, 'mas_comentados': mas_comentados, 'paginas': paginas})
     else:
-        pagina = render(request, 'aparcamientos/public/main.html',{'aparcamientos': aparcamientos, 'mas_comentados': mas_comentados})
+        pagina = render(request, 'aparcamientos/public/main.html',{'aparcamientos': aparcamientos, 'mas_comentados': mas_comentados, 'paginas': paginas})
 
     return pagina
 
@@ -31,6 +65,8 @@ def load_xml(request):
         distritos = parser.init_db()    # Cargamos la base de datos si no tiene aún aparcamientos
 
     if request.user.is_authenticated:
+        (fuente, titulo, color_fondo) = estilo_usuario(request.user)
+        estilo = {'fuente': fuente, 'color_fondo': color_fondo}
         respuesta = render(request, 'aparcamientos/private/redirect_to_main.html',{'usuario': request.user})
     else:
         respuesta = render(request, 'aparcamientos/public/redirect_to_main.html',{})
@@ -56,7 +92,9 @@ def aparcamientos(request):
 
 
     if request.user.is_authenticated:
-        respuesta = render(request, 'aparcamientos/private/mostrar_aparcamientos.html',{'usuario': request.user, 'aparcamientos': aparcamientos, 'accesibles': 0, 'distritos': distritos, 'distrito_filtro': distrito_filtro})
+        (fuente, titulo, color_fondo) = estilo_usuario(request.user)
+        estilo = {'fuente': fuente, 'color_fondo': color_fondo}
+        respuesta = render(request, 'aparcamientos/private/mostrar_aparcamientos.html',{'usuario': request.user,'estilo': estilo, 'aparcamientos': aparcamientos, 'accesibles': 0, 'distritos': distritos, 'distrito_filtro': distrito_filtro})
     else:
         respuesta = render(request, 'aparcamientos/public/mostrar_aparcamientos.html',{'aparcamientos': aparcamientos, 'accesibles': 0, 'distritos': distritos, 'distrito_filtro': distrito_filtro})
 
@@ -86,12 +124,14 @@ def ver_aparcamiento(request,numero):
     except:
         pass
     if request.user.is_authenticated:
+        (fuente, titulo, color_fondo) = estilo_usuario(request.user)
+        estilo = {'fuente': fuente, 'color_fondo': color_fondo}
         usuario = User.objects.get(username=request.user)
         aparcamiento = Aparcamiento.objects.get(identificador=numero)
         seleccionado = SeleccionadoPor.objects.filter(selected_by=usuario,aparcamiento=aparcamiento).count()
 
 
-        respuesta = render(request, 'aparcamientos/private/mi_aparcamiento.html',{'usuario': usuario, 'aparcamiento': mi_aparcamiento, 'comentarios': mis_comentarios, 'seleccionado': seleccionado})
+        respuesta = render(request, 'aparcamientos/private/mi_aparcamiento.html',{'usuario': usuario,'estilo': estilo, 'aparcamiento': mi_aparcamiento, 'comentarios': mis_comentarios, 'seleccionado': seleccionado})
     else:
         respuesta = render(request, 'aparcamientos/public/mi_aparcamiento.html',{'aparcamiento': mi_aparcamiento, 'comentarios': mis_comentarios, 'seleccionado': seleccionado})
 
@@ -118,7 +158,9 @@ def login_page(request):
         redirigir = 0
 
     if request.user.is_authenticated:
-        respuesta = render(request, 'aparcamientos/private/login.html',{'usuario': request.user, 'texto': texto, 'redirigir': redirigir})
+        (fuente, titulo, color_fondo) = estilo_usuario(request.user)
+        estilo = {'fuente': fuente, 'color_fondo': color_fondo}
+        respuesta = render(request, 'aparcamientos/private/login.html',{'usuario': request.user,'estilo': estilo, 'texto': texto, 'redirigir': redirigir})
     else:
         respuesta = render(request, 'aparcamientos/public/login.html',{'texto': texto, 'redirigir': redirigir})
     return respuesta
@@ -149,7 +191,9 @@ def solo_accesibles(request):
     for aparcamiento in aparcamientos:
         print(str(aparcamiento.id))
     if request.user.is_authenticated:
-        respuesta = render(request, 'aparcamientos/private/mostrar_aparcamientos.html',{'usuario': request.user, 'aparcamientos': aparcamientos, 'accesibles': 1, 'distritos': distritos, 'distrito_filtro': distrito_filtro})
+        (fuente, titulo, color_fondo) = estilo_usuario(request.user)
+        estilo = {'fuente': fuente, 'color_fondo': color_fondo}
+        respuesta = render(request, 'aparcamientos/private/mostrar_aparcamientos.html',{'usuario': request.user,'estilo': estilo, 'aparcamientos': aparcamientos, 'accesibles': 1, 'distritos': distritos, 'distrito_filtro': distrito_filtro})
     else:
         respuesta = render(request, 'aparcamientos/public/mostrar_aparcamientos.html',{'aparcamientos': aparcamientos, 'accesibles': 1, 'distritos': distritos, 'distrito_filtro': distrito_filtro})
 
@@ -176,6 +220,27 @@ def deseleccionar_aparcamiento(request, id):
 def user_page(request, username):
     usuario = User.objects.get(username=username)
 
+    if request.method == 'POST':
+        nuevo_color = request.POST['bg_color_choose']
+        tamano_fuente = request.POST['font_size_choose']
+        nuevo_titulo = request.POST['titulo_nuevo']
+        print(nuevo_titulo)
+        try:
+            estilo_de_usuario = Estilo.objects.get(user=usuario)
+            print('lo he conseguido: ' + str(estilo_de_usuario))
+            estilo_de_usuario.font_size = tamano_fuente
+            estilo_de_usuario.background_color = nuevo_color
+        except Estilo.DoesNotExist:
+            print('no existia')
+            estilo_de_usuario = Estilo(user = usuario,
+                                       font_size = tamano_fuente,
+                                       background_color = nuevo_color)
+        if nuevo_titulo:
+            estilo_de_usuario.page_title = nuevo_titulo
+        print('Voy a guardar esto: ' + str(estilo_de_usuario))
+        estilo_de_usuario.save()
+
+
     aparcamientos_seleccionados = SeleccionadoPor.objects.filter(selected_by=usuario)
     offset = 0
     backward = True
@@ -193,10 +258,12 @@ def user_page(request, username):
     seleccionados_trozo = SeleccionadoPor.objects.filter(selected_by=usuario)[offset*5:(offset+1)*5]
 
 
-
-
     if request.user.is_authenticated:
-        respuesta = render(request, 'aparcamientos/private/pagina_de.html', {'usuario': usuario, 'offset': offset,'seleccionados': seleccionados_trozo, 'backward': backward, 'forward': forward})
+        (fuente, titulo, color_fondo) = estilo_usuario(request.user)
+        estilo = {'fuente': fuente, 'color_fondo': color_fondo}
+        print(estilo)
+        personalizar = str(username) == str(request.user)
+        respuesta = render(request, 'aparcamientos/private/pagina_de.html', {'usuario': usuario,'estilo': estilo, 'offset': offset,'seleccionados': seleccionados_trozo, 'backward': backward, 'forward': forward, 'personalizar': personalizar})
     else:
         respuesta = render(request, 'aparcamientos/public/pagina_de.html', {'usuario': usuario, 'offset': offset, 'seleccionados': seleccionados_trozo, 'backward': backward, 'forward': forward})
 
@@ -210,6 +277,8 @@ def about(request):
     usuario = User.objects.get(username=request.user)
 
     if request.user.is_authenticated:
+        (fuente, titulo, color_fondo) = estilo_usuario(request.user)
+        estilo = {'fuente': fuente, 'color_fondo': color_fondo}
         respuesta = render(request,'aparcamientos/private/ayuda.html', {'usuario': usuario})
     else:
         respuesta = render(request, 'aparcamientos/public/ayuda.html',{})

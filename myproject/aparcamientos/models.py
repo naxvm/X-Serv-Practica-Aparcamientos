@@ -6,23 +6,19 @@ from django.conf import settings
 # Create your models here.
 
 class Estilo(models.Model):
-    user = models.OneToOneField(User, null=True)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, null=True)
 
     # Ahora definimos los tamaños de letra que utilizaremos para el CSS
 
-    SIZE_CHOICES = (
-        (5.0, 'HUGE'),
-        (3.0, 'LARGE'),
-        (1.0, 'NORMAL'),
-        (0.75,'SMALL'),
-        (0.5, 'TINY'),
-    )
     # Y el campo para elegirlo
-    font_size = models.FloatField(choices=SIZE_CHOICES, default=1.0)
+    font_size = models.FloatField(default=1.0)
     # Falta el campo para elegir el color de fondo en el CSS
-
+    background_color = models.CharField(max_length=15,default='white')
     # También faltaba este
     page_title = models.CharField(max_length=100, null=True)
+
+    def __str__(self):
+        return ('Estilo de ' + str(self.user) + ": {Fuente: " + str(self.font_size) + '} ' + '{Color: ' + str(self.background_color) + '}')
 
 
 class SeleccionadoPor(models.Model):

@@ -11,7 +11,6 @@
 
 </style>
 
-
 <div id="texto_main"><center>Estás en la página principal</center></div>
 
 <div id="enlace_aparcamientos"><center>Ir a <a href="aparcamientos">todos los aparcamientos</a></center></div>
@@ -27,5 +26,17 @@
     {% endfor %}
   </ol>
 </div>
+{% if paginas %}
+    <span id="menu_paginas">
+      <strong>Páginas de los usuarios</strong><br>
+      <ul>
+        {% for usuario, pagina in paginas.items %}
+          <li><a href="/{{ usuario }}">{{ pagina }}</a></li> 
+
+        {% endfor %}
+      </ul>
+    </span>
+
+{% endif %}
 
 {% endblock content %}
