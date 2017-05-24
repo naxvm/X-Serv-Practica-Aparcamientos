@@ -11,18 +11,21 @@ import datetime
 
 
 def estilo_usuario(usuario):
-    mi_usuario = User.objects.get(username=usuario)
-    try:
-        mi_estilo = Estilo.objects.get(user=mi_usuario)
-        fuente = mi_estilo.font_size
-        titulo = mi_estilo.page_title
-        color_fondo = mi_estilo.background_color
-    except Estilo.DoesNotExist:
-        fuente = 1.0
-        titulo = ("Página de " + str(usuario))
-        color_fondo = "rgb(34, 34, 34)"
+    if usuario.is_authenticated and not usuario.is_anonymous():
+        mi_usuario = User.objects.get(username=usuario)
+        try:
+            mi_estilo = Estilo.objects.get(user=mi_usuario)
+            fuente = mi_estilo.font_size
+            titulo = mi_estilo.page_title
+            color_fondo = mi_estilo.background_color
+        except Estilo.DoesNotExist:
+            fuente = 1.0
+            titulo = ("Página de " + str(usuario))
+            color_fondo = "rgb(34, 34, 34)"
 
-    return (fuente, titulo, color_fondo)
+        return (fuente, titulo, color_fondo)
+    else:
+        return (None, None, None)
 
 def main(request):
     aparcamientos = Aparcamiento.objects.all()
@@ -41,10 +44,8 @@ def main(request):
         paginas[str(usuario)] = titulo
 
     usuario = request.user
-    estilo = None
-    if usuario.is_authenticated:
-        (fuente, titulo, color_fondo) = estilo_usuario(usuario)
-        estilo = {'fuente': fuente, 'color_fondo': color_fondo}
+    (fuente, titulo, color_fondo) = estilo_usuario(usuario)
+    estilo = {'fuente': fuente, 'color_fondo': color_fondo}
 
     contexto = {'inicio': True,
                 'usuario': usuario,
@@ -60,10 +61,8 @@ def load_xml(request):
     if not aparcamientos:
         distritos = parser.init_db()    # Cargamos la base de datos si no tiene aún aparcamientos
     usuario = request.user
-    estilo = None
-    if usuario.is_authenticated:
-        (fuente, titulo, color_fondo) = estilo_usuario(usuario)
-        estilo = {'fuente': fuente, 'color_fondo': color_fondo}
+    (fuente, titulo, color_fondo) = estilo_usuario(usuario)
+    estilo = {'fuente': fuente, 'color_fondo': color_fondo}
     contexto = {'estilo': estilo,'usuario': usuario}
     return render(request, 'aparcamientos/redirect_to_main.html',contexto)
 
@@ -88,9 +87,9 @@ def aparcamientos(request):
 
     estilo = None
     usuario = request.user
-    if usuario.is_authenticated:
-        (fuente, titulo, color_fondo) = estilo_usuario(request.user)
-        estilo = {'fuente': fuente, 'color_fondo': color_fondo}
+
+    (fuente, titulo, color_fondo) = estilo_usuario(request.user)
+    estilo = {'fuente': fuente, 'color_fondo': color_fondo}
     contexto = {'usuario': usuario,
                 'estilo': estilo,
                 'aparcamientos': aparcamientos,
@@ -125,11 +124,10 @@ def ver_aparcamiento(request,numero):
         pass
 
     usuario = request.user
-    estilo = None
     seleccionado = None
-    if usuario.is_authenticated:
-        (fuente, titulo, color_fondo) = estilo_usuario(usuario)
-        estilo = {'fuente': fuente, 'color_fondo': color_fondo}
+    (fuente, titulo, color_fondo) = estilo_usuario(usuario)
+    estilo = {'fuente': fuente, 'color_fondo': color_fondo}
+    if usuario.is_authenticated and not usuario.is_anonymous():
         aparcamiento = None
         try:
             aparcamiento = Aparcamiento.objects.get(identificador=numero)
@@ -175,9 +173,8 @@ def login_page(request):
 
     usuario = request.user
     estilo = None
-    if usuario.is_authenticated:
-        (fuente, titulo, color_fondo) = estilo_usuario(usuario)
-        estilo = {'fuente': fuente, 'color_fondo': color_fondo}
+    (fuente, titulo, color_fondo) = estilo_usuario(usuario)
+    estilo = {'fuente': fuente, 'color_fondo': color_fondo}
     contexto = {'usuario': usuario,
                 'estilo': estilo,
                 'texto': texto,
@@ -209,10 +206,8 @@ def solo_accesibles(request):
         if not aparcamiento.distrito in distritos:
             distritos.append(aparcamiento.distrito)
     usuario = request.user
-    estilo = None
-    if usuario.is_authenticated:
-        (fuente, titulo, color_fondo) = estilo_usuario(usuario)
-        estilo = {'fuente': fuente, 'color_fondo': color_fondo}
+    (fuente, titulo, color_fondo) = estilo_usuario(usuario)
+    estilo = {'fuente': fuente, 'color_fondo': color_fondo}
     contexto = {'usuario': usuario,
                 'estilo': estilo,
                 'aparcamientos': aparcamientos,
@@ -279,11 +274,10 @@ def user_page(request, username):
     seleccionados_trozo = SeleccionadoPor.objects.filter(selected_by=usuario_de_pagina)[offset*5:(offset+1)*5]
 
     usuario = request.user
-    estilo = None
     personalizar = None
+    (fuente, _, color_fondo) = estilo_usuario(usuario)
+    estilo = {'fuente': fuente, 'color_fondo': color_fondo}
     if usuario.is_authenticated:
-        (fuente, _, color_fondo) = estilo_usuario(usuario)
-        estilo = {'fuente': fuente, 'color_fondo': color_fondo}
         personalizar = str(username) == str(usuario)
     (_, titulo_de_pagina, _ ) = estilo_usuario(usuario_de_pagina)
     contexto = {'usuario': usuario,
@@ -306,10 +300,8 @@ def about(request):
         pass
 
     usuario = request.user
-    estilo = None
-    if usuario.is_authenticated:
-        (fuente, titulo, color_fondo) = estilo_usuario(usuario)
-        estilo = {'fuente': fuente, 'color_fondo': color_fondo}
+    (fuente, titulo, color_fondo) = estilo_usuario(usuario)
+    estilo = {'fuente': fuente, 'color_fondo': color_fondo}
     contexto = {'usuario': usuario,
                 'estilo': estilo}
     return render(request,'aparcamientos/ayuda.html', contexto)
