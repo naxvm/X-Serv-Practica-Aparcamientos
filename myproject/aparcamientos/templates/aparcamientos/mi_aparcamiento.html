@@ -1,4 +1,4 @@
-{% extends 'aparcamientos/private/base.html' %}
+{% extends 'aparcamientos/base.html' %}
 
 <style media="screen" type="text/css">
   #informacion {
@@ -64,11 +64,13 @@
 
 <!-- Interfaz para seleccionar el aparcamiento -->
           <br><br>
-          {% if seleccionado %}
-              <div>Has seleccionado este aparcamiento.<a href="/aparcamientos/{{ aparcamiento.identificador }}/unselect">Deseleccionar.</a></div>
-          {% else %}
-              <div><a href="/aparcamientos/{{ aparcamiento.identificador }}/select">Seleccionar este aparcamiento.</a></div>
-          {% endif %}
+            {% if not usuario.is_anonymous %}
+                {% if seleccionado %}
+                    <div>Has seleccionado este aparcamiento.<a href="/aparcamientos/{{ aparcamiento.identificador }}/unselect">Deseleccionar.</a></div>
+                {% else %}
+                    <div><a href="/aparcamientos/{{ aparcamiento.identificador }}/select">Seleccionar este aparcamiento.</a></div>
+                {% endif %}
+            {% endif %}
 
 
 
@@ -88,16 +90,15 @@
                </ul></div>
           {% endif %}
 
-          <!-- INTERFAZ PARA AÑADIR COMENTARIOS -->
-              <form method="POST">
-                    {% csrf_token %}
-                    <label for="comentario">Añadir comentario</label>
-                    <input type="text" name="comentario"/>
-                    <button type="submit">Comentar</button>
-
-              </form>
-
-
+            {% if usuario %}
+                <!-- INTERFAZ PARA AÑADIR COMENTARIOS -->
+                    <form method="POST" action="/aparcamientos/{{ aparcamiento.identificador }}">
+                        {% csrf_token %}
+                        <label for="comentario">Añadir comentario</label>
+                        <input type="text" name="comentario"/>
+                        <button type="submit">Comentar</button>
+                    </form>
+            {% endif %}
 
       {% else %}
           <strong>El aparcamiento seleccionado no existe.</strong>

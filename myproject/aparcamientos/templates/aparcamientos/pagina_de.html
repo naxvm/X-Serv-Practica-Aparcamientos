@@ -1,14 +1,15 @@
-{% extends 'aparcamientos/private/base.html' %}
+{% extends 'aparcamientos/base.html' %}
 
 
 {% block content %}
 
-<div><center><strong><h3>Página de {{ usuario }}</h3></strong></center></div>
+<div><center><strong><h3>{{ titulo_de_pagina }}</h3></strong></center></div>
 
 
 
 
 {% if seleccionados %}
+<a href="/{{ usuario_de_pagina }}/xml">Ver canal XML del usuario</a>
 <div>
     <center><h5>APARCAMIENTOS SELECCIONADOS:</h5></center>
     <ul>
@@ -24,11 +25,11 @@
         {% endfor %}
     </ul>
     {% if backward %}
-    <span><a href="/{{ usuario }}?offset={{ offset|add:"-1" }}">5 Previos</a></span>
+    <span><a href="/{{ usuario_de_pagina }}?offset={{ offset|add:"-1" }}">5 Previos</a></span>
     {% endif %}
 
     {% if forward %}
-    <span><a href="/{{ usuario }}?offset={{ offset|add:"1" }}"> 5 Siguientes</a></span>
+    <span><a href="/{{ usuario_de_pagina }}?offset={{ offset|add:"1" }}"> 5 Siguientes</a></span>
     {% endif %}
 </div>
 

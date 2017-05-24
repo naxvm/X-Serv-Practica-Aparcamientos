@@ -10,12 +10,24 @@
 
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
 
-        <link rel="stylesheet" href="{% static 'css/aparcamientos.css' %}">
+
         <!-- Cabecera para las fuentes (Google Fonts) -->
         <link href="https://fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel="stylesheet" type="text/css">
 
         <link href="https://fonts.googleapis.com/css?family=Playfair+Display&subset=latin,latin-ext" rel="stylesheet" type="text/css">
 
+        <link rel="stylesheet" href="{% static 'css/aparcamientos.css' %}">
+        <!-- Añadimos la personalización de cada usuario -->
+        {% if estilo %}
+          <style media="screen" type="text/css">
+                body {
+                    background-color: {{ estilo.color_fondo }};
+                  }
+                  * {
+                    font-size: {{ estilo.fuente }}em;
+                  }
+          </style>
+        {% endif %}
 
 
     </head>
@@ -28,6 +40,7 @@
                 <span id="site-name">Aparcamientos</span>
                 <span id="site-desc">Práctica final de SARO (2017)</span>
             </a>
+
             <nav>
                 <ul>
                     {% if not inicio %}
@@ -35,21 +48,31 @@
                     {% endif %}
                     <li><a href="/aparcamientos">Todos los aparcamientos</a></li>
                     <li><a href="/about">Ayuda</a></li>
+                    {% if not user.is_anonymous %}
+                      <li><a href="/{{ user.username }}">Mi página</a></li>
+                    {% endif %}
                 </ul>
-            </nav>
-            </nav>
-            <div id=formulario_login>
-              <form method="POST" action="/login">
-                  <label for="username">Username:</label>
-                  <input type="text" id="username" name="username">
-                  <label for="password">Password:</label>
-                  <input type="password" id="password" name="password">
+            </nav
+            {% if user.is_anonymous %}
+              <div id=formulario_login>
+                <form method="POST" action="/login">
+                    {% csrf_token %}
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password">
 
-                  <input type="submit" value="Login">
+                    <input type="submit" value="Login">
 
 
-              </form>
-            </div>
+                </form>
+              </div>
+            {% else %}
+              <div id=datos_usuario>
+                <span>Hola, {{ user.username }}</span>
+                <a href="/logout"><button>Cerrar sesión</button></a>
+              </div>
+            {% endif %}
         </header>
 
 
