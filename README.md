@@ -14,3 +14,5 @@ Repositorio de inicio de la práctica final - Curso 2016/2017
     > Posibilidad de registrarse en el mismo sitio
 
     > Posibilidad de visualizar la ubicación de cada aparcamiento en Google Maps
+    
+    > Gestión de aparcamientos y usuarios no existentes
