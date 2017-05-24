@@ -15,7 +15,6 @@ Repositorio de inicio de la práctica final - Curso 2016/2017
 
     > Posibilidad de visualizar la ubicación de cada aparcamiento en Google Maps
     > Gestión de aparcamientos y usuarios no existentes
-<<<<<<< HEAD
 
 * __Enlace a la parte obligatoria__: [Parte obligatoria](https://youtu.be/u9w7Cu70V14)
-* __Enlace a la parte opcional_: [Parte opcional](https://youtu.be/IaV57_CAtFU)
+* __Enlace a la parte opcional__: [Parte opcional](https://youtu.be/IaV57_CAtFU)
