@@ -20,7 +20,7 @@ def estilo_usuario(usuario):
     except Estilo.DoesNotExist:
         fuente = 1.0
         titulo = ("Página de " + str(usuario))
-        color_fondo = 'white'
+        color_fondo = "rgb(34, 34, 34)"
 
     return (fuente, titulo, color_fondo)
 
@@ -150,16 +150,25 @@ def login_page(request):
     if request.method == 'POST':
         my_username = request.POST['username']
         my_password = request.POST['password']
-
         usuario = authenticate(username=my_username, password=my_password)
-
         if (not usuario or not usuario.is_active):
-            texto = '<font color="red">Login incorrecto. Revisa tus datos</font>'
-            redirigir = 0
+            if request.POST['action'] == 'login':
+                texto = '<font color="red">Login incorrecto. Revisa tus datos</font>'
+                redirigir = 0
+            else:
+                user = User.objects.create_user(username=my_username,
+                                                password=my_password)
+                login(request,user)
+                texto = '<font color="green">¡Bienvenido ' + str(user) + '! Te estamos redirigiendo a la página principal...</font>'
+                redirigir = 1
         else:
-            login(request,usuario) # Envía la cookie de sesión, entre otros
-            texto = '<font color="green">Login correcto. Te estamos redirigiendo a la página principal...</font>'
-            redirigir = 1
+            if request.POST['action'] == 'login':
+                login(request,usuario) # Envía la cookie de sesión, entre otros
+                texto = '<font color="green">Login correcto. Te estamos redirigiendo a la página principal...</font>'
+                redirigir = 1
+            else:
+                texto = '<font color="red">Este usuario ya existe. Elige otro nombre de usuario</font>'
+                redirigir = 0
     else:   # GET
         texto = 'Introduce tus datos para iniciar sesión'
         redirigir = 0

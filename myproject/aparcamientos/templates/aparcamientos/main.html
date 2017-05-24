@@ -39,20 +39,10 @@
                     ({{ aparcamiento.clase_vial }} {{ aparcamiento.nombre_via }})
                 {% endif %}
               </a>
-              <a href="/aparcamientos/{{ aparcamiento.identificador }}" class="btn btn-info">Información local</a>
+              <a href="/aparcamientos/{{ aparcamiento.identificador }}" class="btn btn-info">Más información</a>
             </div><br><br>
           {% endfor %}
         </div>
-        <!--
-    <ol>
-    {% for aparcamiento in mas_comentados %}
-        <li><a href="{{ aparcamiento.url }}">{{ aparcamiento.nombre }}</a>
-          {% if aparcamiento.clase_vial and aparcamiento.nombre_via %}
-              ({{ aparcamiento.clase_vial }} {{ aparcamiento.nombre_via }}).
-          {% endif %}
-          <a href="/aparcamientos/{{ aparcamiento.identificador }}">Información local.</a></li>
-    {% endfor %}
-  </ol>-->
 </div>
 
 {% endblock content %}

@@ -13,6 +13,18 @@
             {% endif %}
           </div>
         </div>
+        <center>
+        {% if not usuario.is_anonymous %}
+            {% if seleccionado %}
+                <p>Aparcamiento seleccionado </p>
+                <p><a class="btn btn-primary" href="/aparcamientos/{{ aparcamiento.identificador }}/unselect" role="button"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Deseleccionar</a></p>
+            {% else %}
+                <p>Aparcamiento no seleccionado </p>
+                <p><a class="btn btn-primary" href="/aparcamientos/{{ aparcamiento.identificador }}/select" role="button"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Seleccionar</a></p>
+            {% endif %}
+        {% endif %}
+      </center>
+
 
         <div class="container" id="caracteristicas">
             <h4><center><span class="glyphicon glyphicon-list" aria-hidden="true"></span> Características</center></h4>
@@ -80,15 +92,6 @@
 
 <!-- Interfaz para seleccionar el aparcamiento -->
         <br><br>
-          {% if not usuario.is_anonymous %}
-              {% if seleccionado %}
-                  <p>Aparcamiento seleccionado </p>
-                  <p><a class="btn btn-primary" href="/aparcamientos/{{ aparcamiento.identificador }}/unselect" role="button"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Deseleccionar</a></p>
-              {% else %}
-                  <p>Aparcamiento no seleccionado </p>
-                  <p><a class="btn btn-primary" href="/aparcamientos/{{ aparcamiento.identificador }}/select" role="button"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Seleccionar</a></p>
-              {% endif %}
-          {% endif %}
 
 
 

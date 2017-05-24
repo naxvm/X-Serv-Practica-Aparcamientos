@@ -24,7 +24,7 @@
             ({{ seleccionado.aparcamiento.clase_vial }} {{ seleccionado.aparcamiento.nombre_via }})
         {% endif %}
       </a>
-      <a href="/aparcamientos/{{ seleccionado.aparcamiento.identificador }}" class="btn btn-info">Información local</a>
+      <a href="/aparcamientos/{{ seleccionado.aparcamiento.identificador }}" class="btn btn-info">Más información</a>
     </div><br><br>
     {% endfor %}
   </div>
@@ -82,11 +82,11 @@
             <div class="form-group">
               <label class="mr-sm-2" for="selector_fuente"><span class="glyphicon glyphicon-font"></span> Selecciona un tamaño de fuente</label>
               <select class="form-control" name="font_size_choose" id="selector_fuente">
-                  <option value="1.2">Muy grande</option>
-                  <option value="1.1">Grande</option>
+                  <option value="2">Muy grande</option>
+                  <option value="1.5">Grande</option>
                   <option selected value="1.0">Normal</option>
-                  <option value="0.9">Pequeña</option>
-                  <option value="0.8">Muy pequeña</option>
+                  <option value="0.75">Pequeña</option>
+                  <option value="0.5">Muy pequeña</option>
               </select>
             </div>
             <div class="form-group">
