@@ -11,11 +11,39 @@
 
 </style>
 
-<div id="texto_main"><center>Estás en la página principal</center></div>
+<div class="jumbotron">
+  <div class="container">
+    <h1>¡Bienvenido!</h1>
+    <p>Estás en la página principal. Entra a navegar por los aparcamientos disponibles.
+    <p><a class="btn btn-primary btn-lg" href="/aparcamientos" role="button">Aparcamientos disponibles</a></p>
+  </div>
+</div>
 
-<div id="enlace_aparcamientos"><center>Ir a <a href="aparcamientos">todos los aparcamientos</a></center></div>
-<br><br>
-<div id="mas_comentados"><center><strong>Aparcamientos más comentados:</strong></center>
+{% if paginas %}
+  <div class="list-group pull-right">
+    <h4>Páginas de usuarios</h4>
+      {% for usuario, pagina in paginas.items %}
+    <a href="/{{ usuario }}" class="list-group-item">{{ pagina }}</a>
+      {% endfor %}
+</div>
+{% endif %}
+
+<div id="mas_comentados">
+    <h4><span class="glyphicon glyphicon-comment"></span> Aparcamientos más comentados</h4>
+
+        <div class="pull-left">
+          {% for aparcamiento in mas_comentados %}
+            <div class="btn-group">
+              <a href="{{ aparcamiento.url }}" class="btn btn-primary">{{ aparcamiento.nombre}}
+                {% if aparcamiento.clase_vial and aparcamiento.nombre_via %}
+                    ({{ aparcamiento.clase_vial }} {{ aparcamiento.nombre_via }})
+                {% endif %}
+              </a>
+              <a href="/aparcamientos/{{ aparcamiento.identificador }}" class="btn btn-info">Información local</a>
+            </div><br><br>
+          {% endfor %}
+        </div>
+        <!--
     <ol>
     {% for aparcamiento in mas_comentados %}
         <li><a href="{{ aparcamiento.url }}">{{ aparcamiento.nombre }}</a>
@@ -24,18 +52,7 @@
           {% endif %}
           <a href="/aparcamientos/{{ aparcamiento.identificador }}">Información local.</a></li>
     {% endfor %}
-  </ol>
+  </ol>-->
 </div>
-{% if paginas %}
-    <span id="menu_paginas">
-      <strong>Páginas de los usuarios</strong><br>
-      <ul>
-        {% for usuario, pagina in paginas.items %}
-          <li><a href="/{{ usuario }}">{{ pagina }}</a></li>
-        {% endfor %}
-      </ul>
-    </span>
-
-{% endif %}
 
 {% endblock content %}

@@ -130,7 +130,11 @@ def ver_aparcamiento(request,numero):
     if usuario.is_authenticated:
         (fuente, titulo, color_fondo) = estilo_usuario(usuario)
         estilo = {'fuente': fuente, 'color_fondo': color_fondo}
-        aparcamiento = Aparcamiento.objects.get(identificador=numero)
+        aparcamiento = None
+        try:
+            aparcamiento = Aparcamiento.objects.get(identificador=numero)
+        except Aparcamiento.DoesNotExist:
+            pass
         seleccionado = SeleccionadoPor.objects.filter(selected_by=usuario,aparcamiento=aparcamiento).exists()
 
 
@@ -209,19 +213,19 @@ def solo_accesibles(request):
     return render(request, 'aparcamientos/mostrar_aparcamientos.html', contexto)
 
 
-
 def seleccionar_aparcamiento(request, id):
     usuario = User.objects.get(username=request.user)
     mi_aparcamiento = Aparcamiento.objects.get(identificador=id)
     seleccionado = SeleccionadoPor.objects.create(aparcamiento = mi_aparcamiento)
     seleccionado.selected_by.add(usuario)
+    print(request.path)
 
     return ver_aparcamiento(request,id)
 
 def deseleccionar_aparcamiento(request, id):
     usuario = User.objects.get(username=request.user)
     aparcamiento = Aparcamiento.objects.get(identificador=id)
-    SeleccionadoPor.objects.get(selected_by=usuario, aparcamiento=aparcamiento).delete()
+    SeleccionadoPor.objects.filter(selected_by=usuario, aparcamiento=aparcamiento).delete()
     return ver_aparcamiento(request,id)
 
 

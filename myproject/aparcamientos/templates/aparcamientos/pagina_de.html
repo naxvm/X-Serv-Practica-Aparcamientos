@@ -3,83 +3,105 @@
 
 {% block content %}
 
-<div><center><strong><h3>{{ titulo_de_pagina }}</h3></strong></center></div>
-
-
-
+<div class="container" id="titulo">
+  <div class="page-header">
+    <h3><center>{{ titulo_de_pagina }}</center></h3>
+    {% if seleccionados %}
+      <p><center><a class="btn btn-primary" href="/{{ usuario_de_pagina }}/xml" role="button">Ver canal XML del usuario</a></center></p>
+    {% endif %}
+  </div>
+</div>
 
 {% if seleccionados %}
-<a href="/{{ usuario_de_pagina }}/xml">Ver canal XML del usuario</a>
-<div>
-    <center><h5>APARCAMIENTOS SELECCIONADOS:</h5></center>
-    <ul>
-        {% for seleccionado in seleccionados %}
-            <li><a href="{{ seleccionado.aparcamiento.url }}">{{ seleccionado.aparcamiento.nombre }}</a>
-              {% if seleccionado.aparcamiento.clase_vial and seleccionado.aparcamiento.nombre_via %}
-                  ({{ seleccionado.aparcamiento.clase_vial }} {{ seleccionado.aparcamiento.nombre_via }}).
-              {% endif %}
-              <a href="/aparcamientos/{{ seleccionado.aparcamiento.identificador }}">Información local.</a>
-               (agregado {{ seleccionado.cuando }})
-          </li>
+<div class="container" id="aparcamientos_seleccionados">
+  <h4><span class="glyphicon glyphicon-star"></span> Aparcamientos seleccionados</h4>
+  <div class="list-inline center-block">
+    {% for seleccionado in seleccionados %}
+    <p class="text-info">Añadido {{ seleccionado.cuando }}:</p>
+    <div class="btn-group">
+      <a href="{{ seleccionado.aparcamiento.url }}" class="btn btn-primary">{{ seleccionado.aparcamiento.nombre}}
+        {% if seleccionado.aparcamiento.clase_vial and seleccionado.aparcamiento.nombre_via %}
+            ({{ seleccionado.aparcamiento.clase_vial }} {{ seleccionado.aparcamiento.nombre_via }})
+        {% endif %}
+      </a>
+      <a href="/aparcamientos/{{ seleccionado.aparcamiento.identificador }}" class="btn btn-info">Información local</a>
+    </div><br><br>
+    {% endfor %}
+  </div>
 
-        {% endfor %}
-    </ul>
-    {% if backward %}
-    <span><a href="/{{ usuario_de_pagina }}?offset={{ offset|add:"-1" }}">5 Previos</a></span>
-    {% endif %}
-
-    {% if forward %}
-    <span><a href="/{{ usuario_de_pagina }}?offset={{ offset|add:"1" }}"> 5 Siguientes</a></span>
-    {% endif %}
+  <nav>
+   <ul class="pager">
+     <li class="previous {% if not backward %}
+                          disabled
+                        {% endif %}"><a href="/{{ usuario_de_pagina }}?offset={{ offset|add:"-1" }}"><span >&larr;</span> 5 previos</a></li>
+     <li class="next {% if not forward %}
+                          disabled
+                        {% endif %}"><a href="/{{ usuario_de_pagina }}?offset={{ offset|add:"1" }}"><span >&rarr;</span> 5 siguientes</a></li>
+   </ul>
+  </nav>
 </div>
 
 
 
-    {% if personalizar %}
-        <div>Personaliza el sitio
-            <form method="POST">
-              {% csrf_token %}
-                <label for="bg_color_choose">Color de fondo:</label>
-                <select name="bg_color_choose" id="bg_color_choose">
-                  <option selected value="white">Blanco</option>
-                  <option value="gray">Gris</option>
-                  <option value="green">Verde</option>
-                  <option value="orange">Naranja</option>
-                  <option value="cadetblue">Azul</option>
-                  <option value="red">Rojo</option>
-                </select>
 
-                <label for="font_size_choose">Tamaño de fuente:</label>
-                <select name="font_size_choose" id="font_size_choose">
-                    <option value="1.2">Muy grande</option>
-                    <option value="1.1">Grande</option>
-                    <option selected value="1.0">Normal</option>
-                    <option value="0.9">Pequeña</option>
-                    <option value="0.8">Muy pequeña</option>
-
-                </select>
-                <label for="titulo_nuevo">Cambiar el título de tu página personal</label>
-                <input type="text" id="titulo_nuevo" name="titulo_nuevo">
-
-                <input type="submit" value="Enviar">
-            </form>
-          </div>
-
-
-
-
-        </div>
-    {% endif %}
 
 {% else %}
 
-<div>Este usuario no ha seleccionado ningún aparcamiento todavía</div>
+  <div class="container" id="mensaje">
+    <h4><center>{{ usuario_de_pagina }} aún no ha seleccionado ningún aparcamiento</center></h4>
+  </div>
 
 {% endif %}
 
 
 
+{% if personalizar %}
 
+  <div class="container">
+    <div class="panel panel-info">
+      <div class="panel-heading"><h4><center>Personalizar el sitio</center></h4></div>
+      <div class="panel-body">
+
+
+
+
+        <form method="POST">
+          {% csrf_token %}
+            <div class="form-group">
+              <label class="mr-sm-2" for="selector_color"><span class="glyphicon glyphicon-tint"></span> Selecciona un color de fondo</label>
+              <select class="form-control" name="bg_color_choose" id="selector_color">
+                <option selected value="rgb(34, 34, 34)">Negro</option>
+                <option value="white">Blanco</option>
+                <option value="gray">Gris</option>
+                <option value="green">Verde</option>
+                <option value="orange">Naranja</option>
+                <option value="cadetblue">Azul</option>
+                <option value="red">Rojo</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="mr-sm-2" for="selector_fuente"><span class="glyphicon glyphicon-font"></span> Selecciona un tamaño de fuente</label>
+              <select class="form-control" name="font_size_choose" id="selector_fuente">
+                  <option value="1.2">Muy grande</option>
+                  <option value="1.1">Grande</option>
+                  <option selected value="1.0">Normal</option>
+                  <option value="0.9">Pequeña</option>
+                  <option value="0.8">Muy pequeña</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="mr-sm-2" for="nuevo_titulo"><span class="glyphicon glyphicon-pencil"></span> Selecciona un título para tu página personal</label>
+              <input class="form-control" id="nuevo_titulo" type="text" class="form-control" name="titulo_nuevo" placeholder="Tu título">
+            </div>
+            <div>
+              <button type="submit" class="btn btn-primary">Filtrar</button>
+            </div>
+        </form>
+      </div>
+  </div>
+
+
+{% endif %}
 
 
 

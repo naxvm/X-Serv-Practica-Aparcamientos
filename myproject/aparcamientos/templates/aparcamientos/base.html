@@ -20,11 +20,9 @@
         <!-- Añadimos la personalización de cada usuario -->
         {% if estilo %}
           <style media="screen" type="text/css">
-                body {
+                #barra-navbar, #footer   {
                     background-color: {{ estilo.color_fondo }};
-                  }
-                  * {
-                    /*font-size: {{ estilo.fuente }}em;*/
+                    font-size: {{ estilo.fuente }}em;
                   }
           </style>
         {% endif %}
@@ -34,7 +32,7 @@
 
 
     <body>
-      <nav class="navbar navbar-inverse navbar-fixed-top">
+      <nav class="navbar navbar-inverse navbar-fixed-top" id="barra-navbar">
         <div class="container-fluid">
 
           <div class="navbar-header">
@@ -48,7 +46,7 @@
           </div>
           <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             {% if user.is_anonymous %}
-              <form method="POST" id="signin" class="navbar-form navbar-right" role="form" action="/login">
+              <form method="POST" id="sign-in" class="navbar-form navbar-right" role="form" action="/login">
                             {% csrf_token %}
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
@@ -63,43 +61,21 @@
                             <button type="submit" class="btn btn-primary">Login</button>
                        </form>
             {% else %}
-              <ul class="nav navbar-nav navbar-right">
+              <ul class="nav navbar-nav navbar-right" id="sign-out">
                 <li><a href="/{{user.username}}"><span class="glyphicon glyphicon-user"></span> {{ user.username }} (ir a mi página)</a></li>
                 <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Salir</a></li>
               </ul>
             {% endif %}
           </div>
+          <ul class="nav nav-tabs-inverse nav-justified">
+            {% if not inicio %}
+              <li role="presentation" class="active"><a href="/"><span class="glyphicon glyphicon-home"></span> Inicio</a></li>
+            {% endif %}
+            <li role="presentation"><a href="/aparcamientos"><span class="glyphicon glyphicon-road"></span> Todos los aparcamientos</a></li>
+            <li role="presentation"><a href="/about"><span class="glyphicon glyphicon-question-sign"></span> Ayuda</a></li>
+          </ul>
         </div>
       </nav>
-      <!--
-                    {% if not user.is_anonymous %}
-                      <li><a href="/{{ user.username }}">Mi página</a></li>
-                    {% endif %}
-                </ul>
-            </nav
-            {% if user.is_anonymous %}
-              <div id=formulario_login>
-                <form method="POST" action="/login">
-                    {% csrf_token %}
-                    <label for="username">Username:</label>
-                    <input type="text" id="username" name="username">
-                    <label for="password">Password:</label>
-                    <input type="password" id="password" name="password">
-
-                    <input type="submit" value="Login">
-
-
-                </form>
-              </div>
-            {% else %}
-              <div id=datos_usuario>
-                <span>Hola, {{ user.username }}</span>
-                <a href="/logout"><button>Cerrar sesión</button></a>
-              </div>
-            {% endif %}
-        </header>
--->
-
 
 
         <div id="contenido">
@@ -108,10 +84,24 @@
         {% endblock %}
         </div>
 
-        <div id="bottom"><center>Esta aplicación
-          utiliza datos del portal de datos abiertos de la ciudad de Madrid.
-          <a href="https://goo.gl/SiJcIL">Enlace al fichero XML con los datos.</a>
-          <a href="https://goo.gl/jmzQ5N">Enlace a la descripción del formato.</a>
-        </center></div>
+        <div class="navbar navbar-inverse navbar-fixed-bottom" id="footer">
+          <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+              </button>
+          </div>
+          <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="https://goo.gl/SiJcIL"><span class="glyphicon glyphicon-align-left"></span>Datos</a></li>
+              <li><a href="https://goo.gl/jmzQ5N"><span class="glyphicon glyphicon-info-sign"></span> Descripción del formato</a></li>
+            </ul>
+            <p class="navbar-text navbar-left">Esta aplicación utiliza datos del portal de datos abiertos de la ciudad de Madrid.</p>
+
+          </div>
+        </div>
+        <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     </body>
 </html>

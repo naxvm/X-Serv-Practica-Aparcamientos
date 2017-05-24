@@ -1,110 +1,135 @@
 {% extends 'aparcamientos/base.html' %}
 
-<style media="screen" type="text/css">
-  #informacion {
-    margin-top: 200px;
-    padding-top: 50px;
-  }
 
-  #caracteristicas{
-    margin-top: 50px;
-    padding-top: 50px;
-  }
 
-</style>
 {% block content %}
 
-  <div id="informacion"><center>
-      {% if aparcamiento %}
-          <h1><strong>Nombre:</strong> {{ aparcamiento.nombre }}</h1></center>
-          {% if aparcamiento.accesibilidad %}
-              <center><u>¡Aparcamiento accesible!</u></center>
-          {% endif %}
-          <ul id="caracteristicas">
-              {% if aparcamiento.distrito %}
-                  <li><strong>Distrito: </strong> {{ aparcamiento.distrito }} <br>
-              {% endif %}
+{% if aparcamiento %}
+        <div class="container" id="titulo">
+          <div class="page-header">
+            <h3><center>{{ aparcamiento.nombre }}</center></h3>
+            {% if aparcamiento.accesibilidad %}
+                <p><center>¡Aparcamiento accesible!</center></p>
+            {% endif %}
+          </div>
+        </div>
 
-              {% if aparcamiento.barrio %}
-                  <li><strong>Barrio: </strong> {{ aparcamiento.barrio }} <br></li>
-              {% endif %}
+        <div class="container" id="caracteristicas">
+            <h4><center><span class="glyphicon glyphicon-list" aria-hidden="true"></span> Características</center></h4>
+            {% if aparcamiento.distrito %}
+            <div class="panel panel-info">
+              <div class="panel-heading">Distrito</div>
+              <div class="panel-body">{{ aparcamiento.distrito }}</div>
+            </div>
+            {% endif %}
 
-              {% if aparcamiento.descripcion %}
-                  <li><strong>Descripción:</strong> {{ aparcamiento.descripcion }}<br></li>
-              {% endif %}
+            {% if aparcamiento.barrio %}
+            <div class="panel panel-info">
+              <div class="panel-heading">Barrio</div>
+              <div class="panel-body">{{ aparcamiento.barrio }}</div>
+            </div>
+            {% endif %}
 
-              {% if aparcamiento.correo %}
-                  <li><strong>Correo:</strong> {{ aparcamiento.correo }}<br></li>
-              {% endif %}
+            {% if aparcamiento.descripcion %}
+            <div class="panel panel-info">
+              <div class="panel-heading">Descripción</div>
+              <div class="panel-body">{{ aparcamiento.descripcion }}</div>
+            </div>
+            {% endif %}
 
-              {% if aparcamiento.telefono %}
-                  <li><strong>Teléfono:</strong> {{ aparcamiento.telefono }}<br></li>
-              {% endif %}
+            {% if aparcamiento.correo %}
+            <div class="panel panel-info">
+              <div class="panel-heading">Correo</div>
+              <div class="panel-body"><a href="mailto:{{ aparcamiento.correo }}">{{ aparcamiento.correo }}</a></div>
+            </div>
+            {% endif %}
 
-              {% if aparcamiento.clase_vial and aparcamiento.nombre_via %}
-                  <li><strong>Dirección: </strong> {{ aparcamiento.clase_vial }} {{ aparcamiento.nombre_via }}
-                    {% if aparcamiento.numero %}
-                        {{ aparcamiento.numero }}
-                    {% endif %}
-                    <br></li>
-              {% endif %}
+            {% if aparcamiento.telefono %}
+            <div class="panel panel-info">
+              <div class="panel-heading">Teléfono</div>
+              <div class="panel-body"><a href="callto:{{ aparcamiento.telefono }}">{{ aparcamiento.telefono }}</a></div>
+            </div>
+            {% endif %}
 
-              {% if aparcamiento.url %}
-                  <li><strong><a href="{{ aparcamiento.url }}">Página (esmadrid)</a></strong><br>
-              {% endif %}
+            {% if aparcamiento.clase_vial and aparcamiento.nombre_via %}
+            <div class="panel panel-info">
+              <div class="panel-heading">Dirección</div>
+              <div class="panel-body">{{ aparcamiento.clase_vial }} {{ aparcamiento.nombre_via}} {{ aparcamiento.numero }}</div>
+            </div>
+            {% endif %}
 
-              {% if aparcamiento.latitud %}
-                  <li><strong>Latitud:</strong> {{ aparcamiento.latitud}}<br>
-              {% endif %}
+            {% if aparcamiento.url %}
+            <div class="panel panel-info">
+              <div class="panel-heading">Página (portal esmadrid)</div>
+              <div class="panel-body"><a href="{{ aparcamiento.url }}">Acceder</a></div>
+            </div>
+            {% endif %}
 
-              {% if aparcamiento.longitud %}
-                  <li><strong>Longitud:</strong> {{ aparcamiento.longitud}}<br>
-              {% endif %}
-          </ul>
+            {% if aparcamiento.latitud and aparcamiento.longitud %}
+            <div class="panel panel-info">
+              <div class="panel-heading">Localización</div>
+              <div class="panel-body">
+                <p>Latitud: {{ aparcamiento.latitud }}</p>
+                <p>Longitud: {{ aparcamiento.longitud }}</p>
+                <center><iframe width="600" height="400" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?q={{ aparcamiento.latitud}},{{ aparcamiento.longitud }}&hl=es;z=14&amp;output=embed"></iframe></center>
+
+              </div>
+            </div>
+            {% endif %}
+        </div>
 
 <!-- Interfaz para seleccionar el aparcamiento -->
-          <br><br>
-            {% if not usuario.is_anonymous %}
-                {% if seleccionado %}
-                    <div>Has seleccionado este aparcamiento.<a href="/aparcamientos/{{ aparcamiento.identificador }}/unselect">Deseleccionar.</a></div>
-                {% else %}
-                    <div><a href="/aparcamientos/{{ aparcamiento.identificador }}/select">Seleccionar este aparcamiento.</a></div>
-                {% endif %}
-            {% endif %}
-
-
-
-
-
-          {% if comentarios %}
-              <h6><strong><br><br>COMENTARIOS DEL APARCAMIENTO:</strong></h6>
-               <div><ul>
-
-                    {% for comentario in comentarios %}
-                        <div>
-                          <li><strong>{{ comentario.hora }}:<br></strong>
-                          {{ comentario.contenido }}</li>
-                        </div>
-                    {% endfor %}
-
-               </ul></div>
+        <br><br>
+          {% if not usuario.is_anonymous %}
+              {% if seleccionado %}
+                  <p>Aparcamiento seleccionado </p>
+                  <p><a class="btn btn-primary" href="/aparcamientos/{{ aparcamiento.identificador }}/unselect" role="button"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Deseleccionar</a></p>
+              {% else %}
+                  <p>Aparcamiento no seleccionado </p>
+                  <p><a class="btn btn-primary" href="/aparcamientos/{{ aparcamiento.identificador }}/select" role="button"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Seleccionar</a></p>
+              {% endif %}
           {% endif %}
 
-            {% if usuario %}
-                <!-- INTERFAZ PARA AÑADIR COMENTARIOS -->
-                    <form method="POST" action="/aparcamientos/{{ aparcamiento.identificador }}">
-                        {% csrf_token %}
-                        <label for="comentario">Añadir comentario</label>
-                        <input type="text" name="comentario"/>
-                        <button type="submit">Comentar</button>
-                    </form>
-            {% endif %}
 
-      {% else %}
-          <strong>El aparcamiento seleccionado no existe.</strong>
-      {% endif %}
-      <br><a href="/aparcamientos">Volver a la página de aparcamientos</a>
-  </center></div>
+
+
+
+        {% if comentarios %}
+        <div class="container" id="comentarios">
+          <h4><center><span class="glyphicon glyphicon-comment" aria-hidden="true"></span> Comentarios</center></h4>
+          {% for comentario in comentarios %}
+          <div class="panel panel-default">
+            <div class="panel-heading">{{ comentario.hora }}</div>
+            <div class="panel-body">{{comentario.contenido }}</div>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <div class="container" id="comentarios">
+          <h4><center><span class="glyphicon glyphicon-comment" aria-hidden="true"></span> Este aparcamiento no tiene ningún comentario</center></h4>
+        </div>
+        {% endif %}
+
+          {% if usuario %}
+          <div class="container" id="formulario_comentar">
+            <h4><center><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Añadir comentario</center></h4>
+            <center><form method="POST" class="form-inline">
+              {% csrf_token %}
+                <div class="form-group">
+                  <textarea class="form-control" name="comentario" placeholder="Escribe tu comentario" style="min-width: 100%" rows="3"></textarea>
+                </div>
+                  <br><br><button type="submit" class="btn btn-primary">Enviar</button>
+            </center></form>
+
+          {% endif %}
+
+{% else %}
+<div class="container">
+  <div class="page-header">
+    <h4><center>El aparcamiento seleccionado no existe</center></h4>
+  </div>
+</div>
+{% endif %}
 
 
 

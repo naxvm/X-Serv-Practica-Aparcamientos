@@ -1,11 +1,13 @@
 {% extends 'aparcamientos/base.html' %}
 
 {% block content %}
-
+  <div class="jumbotron">
+    <h3><center>
       {% autoescape off %}{{ texto }}{% endautoescape %}
-
+    </h3></center>
+  </div>
       {% if redirigir %}  <!-- Login correcto: a la página principal -->
-          <meta http-equiv="REFRESH" content="4;url=/">
+          <meta http-equiv="REFRESH" content="3;url=/">
 
       {% endif %}
 
