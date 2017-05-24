@@ -1,0 +1,29 @@
+* {
+    font-family: 'Lucida Grande';
+}
+
+
+body { padding-top: 91px;
+       padding-right: 10px;
+       padding-left: 10px;
+       padding-bottom: 51px;
+}
+
+
+.navbar navbar-inverse navbar-fixed-top {
+    font-family: 'Playfair Display';
+}
+
+
+.jumbotron {
+  border-radius: 6px;
+}
+
+#banner {
+  max-height:49px;
+
+}
+
+#texto_footer{
+  font-size: 70%;
+}

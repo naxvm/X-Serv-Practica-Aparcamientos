@@ -230,7 +230,10 @@ def deseleccionar_aparcamiento(request, id):
 
 
 def user_page(request, username):
-    usuario_de_pagina = User.objects.get(username=username)
+    try:
+        usuario_de_pagina = User.objects.get(username=username)
+    except User.DoesNotExist:
+        return not_found(request,username)
     usuario = request.user
 
     if request.method == 'POST':
@@ -312,3 +315,9 @@ def user_xml(request, user):
     contexto = {'usuario': usuario,
                 'aparcamientos_seleccionados': aparcamientos_seleccionados}
     return render(request, 'aparcamientos/user_xml.html', contexto, content_type="text/xml")
+
+def not_found(request,resource):
+
+    contexto = {'recurso': resource}
+
+    return render(request, 'aparcamientos/not_found.html', contexto)
