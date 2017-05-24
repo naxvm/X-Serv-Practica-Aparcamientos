@@ -32,52 +32,53 @@
 
 
     <body>
-      <nav class="navbar navbar-inverse navbar-fixed-top" id="barra-navbar">
-        <div class="container-fluid">
+        <nav class="navbar navbar-inverse navbar-fixed-top" id="barra-navbar">
+          <div class="container-fluid">
 
-          <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            <a href="/" class="navbar-left"><img id="banner" src="{% static 'images/banner.png' %}"></a>
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a href="/" class="navbar-left"><img id="banner" src="{% static 'images/banner.png' %}"></a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+              {% if user.is_anonymous %}
+                <form method="POST" id="sign-in" class="navbar-form navbar-right" role="form" action="/login">
+                              {% csrf_token %}
+                              <div class="input-group">
+                                  <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                  <input id="username" type="text" class="form-control" name="username" value="" placeholder="Username">
+                              </div>
+
+                              <div class="input-group">
+                                  <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                                  <input id="password" type="password" class="form-control" name="password" value="" placeholder="Password">
+                              </div>
+
+                              <button type="submit" name="action" value="login" class="btn btn-primary">Login</button>
+                              <button type="submit" name="action" value="register" class="btn btn-primary">Registrarse</button>
+                         </form>
+              {% else %}
+                <ul class="nav navbar-nav navbar-right" id="sign-out">
+                  <li><a href="/{{user.username}}"><span class="glyphicon glyphicon-user"></span> {{ user.username }} (ir a mi página)</a></li>
+                  <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Salir</a></li>
+                </ul>
+              {% endif %}
+            </div>
+            <ul class="nav nav-tabs-inverse nav-justified">
+              {% if not inicio %}
+                <li role="presentation" class="active"><a href="/"><span class="glyphicon glyphicon-home"></span> Inicio</a></li>
+              {% endif %}
+              <li role="presentation"><a href="/aparcamientos"><span class="glyphicon glyphicon-road"></span> Todos los aparcamientos</a></li>
+              <li role="presentation"><a href="/about"><span class="glyphicon glyphicon-question-sign"></span> Ayuda</a></li>
+            </ul>
           </div>
-          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        </nav>
 
-            {% if user.is_anonymous %}
-              <form method="POST" id="sign-in" class="navbar-form navbar-right" role="form" action="/login">
-                            {% csrf_token %}
-                            <div class="input-group">
-                                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                                <input id="username" type="text" class="form-control" name="username" value="" placeholder="Email Address">
-                            </div>
-
-                            <div class="input-group">
-                                <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                                <input id="password" type="password" class="form-control" name="password" value="" placeholder="Password">
-                            </div>
-
-                            <button type="submit" name="action" value="login" class="btn btn-primary">Login</button>
-                            <button type="submit" name="action" value="register" class="btn btn-primary">Registrarse</button>
-                       </form>
-            {% else %}
-              <ul class="nav navbar-nav navbar-right" id="sign-out">
-                <li><a href="/{{user.username}}"><span class="glyphicon glyphicon-user"></span> {{ user.username }} (ir a mi página)</a></li>
-                <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Salir</a></li>
-              </ul>
-            {% endif %}
-          </div>
-          <ul class="nav nav-tabs-inverse nav-justified">
-            {% if not inicio %}
-              <li role="presentation" class="active"><a href="/"><span class="glyphicon glyphicon-home"></span> Inicio</a></li>
-            {% endif %}
-            <li role="presentation"><a href="/aparcamientos"><span class="glyphicon glyphicon-road"></span> Todos los aparcamientos</a></li>
-            <li role="presentation"><a href="/about"><span class="glyphicon glyphicon-question-sign"></span> Ayuda</a></li>
-          </ul>
-        </div>
-      </nav>
 
 
         <div id="contenido">

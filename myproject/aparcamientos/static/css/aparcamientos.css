@@ -3,10 +3,11 @@
 }
 
 
-body { padding-top: 91px;
-       padding-right: 10px;
+#contenido {
+       padding-top: 100px;
+       padding-bottom: 50px;
        padding-left: 10px;
-       padding-bottom: 51px;
+       padding-right: 10px;
 }
 
 
@@ -20,10 +21,16 @@ body { padding-top: 91px;
 }
 
 #banner {
-  max-height:49px;
+  max-height: 49px;
 
 }
 
+#header {
+  padding: 10px;
+}
+#footer{
+  height: 50px;
+}
 #texto_footer{
   font-size: 70%;
 }
